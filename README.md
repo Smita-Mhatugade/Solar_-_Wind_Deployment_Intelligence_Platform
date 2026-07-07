@@ -1,6 +1,6 @@
 <div align="center">
 
-# ☀️💨 Solar & Wind Deployment Intelligence Platform
+# ☀️ Solar & Wind Deployment Intelligence Platform
 
 **An AI-powered platform for identifying, evaluating, and optimizing renewable energy deployment sites**
 
@@ -361,7 +361,7 @@ $$\text{Deployment Suitability Score} = \sum w_i \times f_i$$
 
 | Factor | Weight | Description |
 |---|---|---|
-| ☀️💨 **Renewable Resource Availability** | **35%** | Solar irradiance + wind speed potential |
+| ☀️ **Renewable Resource Availability** | **35%** | Solar irradiance + wind speed potential |
 | 🏔️ **Geographic Suitability** | **25%** | Terrain, slope, elevation, land cover |
 | 🏗️ **Infrastructure Accessibility** | **15%** | Distance to roads, substations, grid |
 | 🌿 **Environmental Impact** | **15%** | Protected zones, water bodies, NDVI |
@@ -505,7 +505,7 @@ All endpoints are prefixed with `/api/v1/`. Interactive docs: `http://localhost:
 | `POST` | `/sites/register` | Register a new site |
 | `GET` | `/sites/compare` | Compare multiple sites |
 
-### ☀️💨 Predictions
+### ☀️ Predictions
 | Method | Endpoint | Description |
 |---|---|---|
 | `POST` | `/solar/predict` | Solar energy yield for coordinates |
