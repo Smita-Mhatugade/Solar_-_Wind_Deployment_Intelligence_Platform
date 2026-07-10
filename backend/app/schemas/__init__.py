@@ -14,6 +14,7 @@ from app.schemas.solar import SolarPredictionRequest, SolarPredictionResponse
 from app.schemas.wind import WindPredictionRequest, WindPredictionResponse
 from app.schemas.site import SiteAnalysisRequest, SiteAnalysisResponse
 from app.schemas.report import ReportRequest, ReportResponse
+from app.schemas.project import ProjectCreate, ProjectResponse
 
 __all__ = [
     "UserCreate",
@@ -28,4 +29,6 @@ __all__ = [
     "SiteAnalysisResponse",
     "ReportRequest",
     "ReportResponse",
+    "ProjectCreate",
+    "ProjectResponse",
 ]

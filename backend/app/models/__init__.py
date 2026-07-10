@@ -11,8 +11,9 @@ Tables implemented:
   - WindPrediction  – Results from wind energy predictions
   - SiteAnalysis    – Site suitability scores
   - Report          – Generated report metadata
+  - Project         – Solar/wind deployment projects
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
+Day 6 – Infosys Virtual Internship | 10 July 2026
 """
 
 from app.models.user import User
@@ -20,6 +21,7 @@ from app.models.solar_prediction import SolarPrediction
 from app.models.wind_prediction import WindPrediction
 from app.models.site_analysis import SiteAnalysis
 from app.models.report import Report
+from app.models.project import Project
 
 # Export all models so Base.metadata.create_all() can see them
 __all__ = [
@@ -28,4 +30,5 @@ __all__ = [
     "WindPrediction",
     "SiteAnalysis",
     "Report",
+    "Project",
 ]
