@@ -325,26 +325,6 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-#### Configure Environment Variables
-
-The `.env` file in `backend/` already exists and is pre-filled. **Review and update** these values to match your PostgreSQL setup:
-
-```env
-# backend/.env  (already present — just verify these values)
-
-DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5433/solar_wind_db
-POSTGRES_DB=solar_wind_db
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=YOUR_PASSWORD
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5433           # Change to 5432 if using Docker or default PG port
-
-JWT_SECRET_KEY=your-jwt-secret-key-change-in-production
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-```
-
->  **Never commit your real `.env` file to version control.**
-
 #### Start the Backend Server
 
 ```powershell
