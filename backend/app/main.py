@@ -10,19 +10,21 @@ This is the main application file that:
 Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 
 from app.config import settings
 from app.database import test_db_connection, engine, Base
+from app.models.project import Project
 from app.api import (
     auth_router,
     solar_router,
     wind_router,
     site_router,
     reports_router,
+    projects_router,
 )
 
 # Set up logging
@@ -37,15 +39,14 @@ async def lifespan(app: FastAPI):
     and code to run after it stops.
     """
     logger.info(f"Starting {settings.APP_NAME} v{settings.APP_VERSION}")
-    
-    # Test DB Connection
+
+    # Test DB Connection and auto-create all tables on startup
     db_ok = test_db_connection()
     if not db_ok:
         logger.warning("Database is not reachable. App is starting, but DB endpoints will fail.")
     else:
-        # For development only: Auto-create tables (in production use Alembic migrations)
-        # Base.metadata.create_all(bind=engine)
-        logger.info("Database connection verified.")
+        Base.metadata.create_all(bind=engine)
+        logger.info("Database tables verified/created successfully.")
     
     yield  # App runs here
     
@@ -63,10 +64,10 @@ app = FastAPI(
 # Configure CORS (Allows frontend on localhost:3000 to call backend on localhost:8000)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc)
-    allow_headers=["*"],  # Allow all headers
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # ── Include API Routers ───────────────────────────────────────────────────────
@@ -77,15 +78,57 @@ app.include_router(solar_router, prefix=f"{api_prefix}/solar", tags=["Solar Pred
 app.include_router(wind_router, prefix=f"{api_prefix}/wind", tags=["Wind Prediction"])
 app.include_router(site_router, prefix=f"{api_prefix}/site", tags=["Site Suitability Analysis"])
 app.include_router(reports_router, prefix=f"{api_prefix}/reports", tags=["Report Generation"])
+app.include_router(projects_router, prefix=f"{api_prefix}/projects", tags=["Projects"])
 
 
-# ── Root Endpoint ─────────────────────────────────────────────────────────────
-@app.get("/", tags=["Health Check"])
+# ── Health & Status Endpoints ─────────────────────────────────────────────────
+
+@app.get("/", tags=["Health"])
 def read_root():
-    """Health check endpoint to verify API is running."""
+    """Root endpoint – confirms API is online."""
     return {
         "app": settings.APP_NAME,
         "version": settings.APP_VERSION,
         "status": "online",
-        "message": "Welcome to the Solar & Wind Deployment Intelligence API. Visit /docs for the interactive API documentation."
+        "docs": "/docs",
     }
+
+@app.get("/ping", tags=["Health"])
+def ping():
+    """Simple liveness check."""
+    return {"status": "ok", "service": "solar-wind-api"}
+
+@app.get("/health", tags=["Health"])
+def health():
+    """Returns the current health status of the application."""
+    return {"status": "running", "app": settings.APP_NAME}
+
+@app.get("/db-health", tags=["Health"])
+def db_health():
+    """Returns the database connection status."""
+    if test_db_connection():
+        return {"status": "ok", "database": "connected"}
+    raise HTTPException(status_code=503, detail="Database connection failed")
+
+@app.get("/db-status", tags=["Health"])
+def db_status():
+    """Check database connection and return record counts for all tables."""
+    from app.database import SessionLocal
+    from sqlalchemy import text
+    try:
+        db = SessionLocal()
+        db.execute(text("SELECT 1"))
+        tables = ["users", "projects", "solar_predictions", "wind_predictions", "site_analyses", "reports"]
+        counts = {}
+        for table in tables:
+            try:
+                result = db.execute(text(f"SELECT COUNT(*) FROM {table}"))
+                counts[table] = result.scalar()
+            except Exception:
+                counts[table] = "error"
+        return {"status": "connected", "table_counts": counts}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Database connection failed: {str(e)}")
+    finally:
+        if 'db' in locals():
+            db.close()

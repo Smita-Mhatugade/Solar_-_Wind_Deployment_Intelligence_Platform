@@ -22,7 +22,7 @@ Day 5 – Infosys Virtual Internship | 5 July 2026
 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
 from sqlalchemy.orm import relationship
-from app.database.connection import Base
+from app.database.database import Base
 
 
 class User(Base):
@@ -63,6 +63,7 @@ class User(Base):
     wind_predictions = relationship("WindPrediction", back_populates="user", cascade="all, delete-orphan")
     site_analyses = relationship("SiteAnalysis", back_populates="user", cascade="all, delete-orphan")
     reports = relationship("Report", back_populates="user", cascade="all, delete-orphan")
+    projects = relationship("Project", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email} role={self.role}>"

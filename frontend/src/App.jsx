@@ -1,122 +1,168 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+/**
+ * App.jsx — Main application with React Router
+ *
+ * Routes:
+ *   /              → redirect to /login
+ *   /login         → LoginPage
+ *   /register      → RegisterPage
+ *   /dashboard     → DashboardPage (protected)
+ *   /projects      → ProjectsPage (protected)
+ *   /solar         → ComingSoonPage (protected)
+ *   /wind          → ComingSoonPage (protected)
+ *   /site-analysis → ComingSoonPage (protected)
+ *   /reports       → ComingSoonPage (protected)
+ */
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+import ProtectedRoute from './components/ProtectedRoute';
+import Sidebar from './components/Sidebar';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import DashboardPage from './pages/DashboardPage';
+import ProjectsPage from './pages/ProjectsPage';
 
+import SiteAnalysisPage from './pages/SiteAnalysisPage';
+
+/** Placeholder for Milestone 2 pages */
+function ComingSoonPage({ title, icon }) {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <div className="page-content">
+      <div className="page-header">
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <h1 className="page-title">{title}</h1>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      </div>
+      <div className="card">
+        <div className="empty-state" style={{ padding: '4rem' }}>
+          <h3>{title}</h3>
+          <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <span className="badge badge-analyst">ML Model Integration</span>
+            <span className="badge badge-admin">Dataset Processing</span>
+            <span className="badge badge-success">GIS Analysis</span>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </div>
+    </div>
+  );
 }
 
-export default App
+/** Layout wrapper: sidebar + topbar + content */
+function DashboardLayout({ children }) {
+  const location = useLocation();
+
+  const TITLES = {
+    '/dashboard': { label: 'Dashboard' },
+    '/projects': { label: 'My Projects' },
+    '/solar': { label: 'Solar Prediction' },
+    '/wind': { label: 'Wind Prediction' },
+    '/site-analysis': { label: 'Site Suitability Analysis' },
+    '/reports': { label: 'Reports' },
+  };
+
+  const current = TITLES[location.pathname] || { label: 'Platform' };
+
+  const user = (() => {
+    try { return JSON.parse(localStorage.getItem('user') || '{}'); }
+    catch { return {}; }
+  })();
+
+  return (
+    <div className="app-layout">
+      <Sidebar />
+      <div className="main-content">
+        {/* Topbar */}
+        <header className="topbar">
+          <div className="topbar-title">
+            {current.label}
+          </div>
+          <div className="topbar-actions">
+            {user.role && (
+              <span className={`badge badge-${user.role}`}>{user.role}</span>
+            )}
+            <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-muted)' }}>
+              {user.email}
+            </span>
+          </div>
+        </header>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* Protected routes — wrapped in DashboardLayout */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <DashboardPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ProjectsPage />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/solar"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ComingSoonPage title="Solar Prediction" />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wind"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ComingSoonPage title="Wind Prediction" />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/site-analysis"
+          element={
+            <DashboardLayout>
+              <SiteAnalysisPage />
+            </DashboardLayout>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <ComingSoonPage title="Reports" />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}

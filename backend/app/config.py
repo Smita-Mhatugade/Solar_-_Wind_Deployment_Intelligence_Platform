@@ -8,7 +8,7 @@ Day 5 – Infosys Virtual Internship | 5 July 2026
 Task: Backend Foundation – Configuration Module
 """
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 import json
 
@@ -41,7 +41,16 @@ class Settings(BaseSettings):
 
     # ── API Settings ──────────────────────────────────────────────────────
     API_V1_STR: str = "/api/v1"
-    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8080"]
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174"
+    ]
 
     # ── Dataset Paths ─────────────────────────────────────────────────────
     NASA_POWER_DATA_PATH: str = "datasets/nasa_power"
@@ -58,9 +67,10 @@ class Settings(BaseSettings):
     # ── Reports ───────────────────────────────────────────────────────────
     REPORTS_OUTPUT_PATH: str = "reports/"
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True
+    )
 
 
 # Singleton settings instance — import this throughout the app

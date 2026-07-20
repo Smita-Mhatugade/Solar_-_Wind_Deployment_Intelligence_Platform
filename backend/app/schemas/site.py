@@ -14,7 +14,6 @@ class SiteAnalysisRequest(BaseModel):
     latitude: float = Field(..., ge=-90.0, le=90.0)
     longitude: float = Field(..., ge=-180.0, le=180.0)
 
-
 class SiteAnalysisResponse(BaseModel):
     id: int
     user_id: int
@@ -42,5 +41,33 @@ class SiteAnalysisResponse(BaseModel):
     recommendation: Optional[str]
     notes: Optional[str]
     created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CriteriaEvaluationItem(BaseModel):
+    value: float
+    status: str
+
+class CriteriaEvaluation(BaseModel):
+    solar_irradiance: CriteriaEvaluationItem
+    wind_speed: CriteriaEvaluationItem
+    slope: CriteriaEvaluationItem
+    distance_to_grid: CriteriaEvaluationItem
+    distance_to_road: CriteriaEvaluationItem
+
+class Constraints(BaseModel):
+    protected_area: bool
+    water_body: bool
+
+class DetailedSiteAnalysisResponse(BaseModel):
+    site_id: int
+    latitude: float
+    longitude: float
+    overall_score: float
+    recommendation: str
+    criteria_evaluation: CriteriaEvaluation
+    constraints: Constraints
+    remarks: list[str]
 
     model_config = ConfigDict(from_attributes=True)

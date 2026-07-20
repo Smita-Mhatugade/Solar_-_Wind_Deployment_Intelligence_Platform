@@ -82,6 +82,7 @@ class ProjectResponse(BaseModel):
     """
 
     id: int
+    user_id: int
     project_name: str
     description: Optional[str]
     state: str

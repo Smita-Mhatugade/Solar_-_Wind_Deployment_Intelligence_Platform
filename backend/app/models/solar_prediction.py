@@ -31,7 +31,7 @@ Day 5 – Infosys Virtual Internship | 5 July 2026
 
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, func
 from sqlalchemy.orm import relationship
-from app.database.connection import Base
+from app.database.database import Base
 
 
 class SolarPrediction(Base):

@@ -1,21 +1,20 @@
 <div align="center">
 
-# ☀️ Solar & Wind Deployment Intelligence Platform
+# ☀️💨 Solar & Wind Deployment Intelligence Platform
 
 **An AI-powered platform for identifying, evaluating, and optimizing renewable energy deployment sites**
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-PostGIS-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Secondary_DB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+PostGIS-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-ML-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://tensorflow.org)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
 
-> 🎓 **Infosys Springboard Virtual Internship** | Solar & Wind Deployment Intelligence Platform
+> 🎓 **Infosys Springboard Virtual Internship** — Smita Mhatugade
 
-*Empowering renewable energy companies, government agencies, utility providers, and sustainability consultants with AI-driven geospatial intelligence.*
+*Empowering renewable energy companies, government agencies, and sustainability consultants with AI-driven geospatial intelligence.*
 
 </div>
 
@@ -23,395 +22,126 @@
 
 ## 📖 Table of Contents
 
-- [Objective](#-objective)
-- [Key Outcomes](#-key-outcomes)
+- [What This Project Does](#-what-this-project-does)
 - [System Architecture](#-system-architecture)
-- [Modules](#-modules)
-- [Site Scoring Engine](#-site-scoring-engine)
 - [Tech Stack](#-tech-stack)
-- [Dataset Sources](#-dataset-sources)
 - [Project Structure](#-project-structure)
+- [Prerequisites](#-prerequisites)
+- [Quick Start (Running Locally)](#-quick-start-running-locally)
+  - [Step 1 – Clone the Repository](#step-1--clone-the-repository)
+  - [Step 2 – Set Up PostgreSQL](#step-2--set-up-postgresql)
+  - [Step 3 – Backend Setup](#step-3--backend-setup)
+  - [Step 4 – Frontend Setup](#step-4--frontend-setup)
+  - [Step 5 – Verify Everything Works](#step-5--verify-everything-works)
+- [Environment Variables Reference](#-environment-variables-reference)
 - [API Reference](#-api-reference)
-- [Getting Started](#-getting-started)
 - [Database Schema](#-database-schema)
+- [Running Tests](#-running-tests)
+- [User Roles & Access Control](#-user-roles--access-control)
+- [Data Sources](#-data-sources)
 - [Milestone Roadmap](#-milestone-roadmap)
-- [Evaluation Criteria](#-evaluation-criteria)
-- [Performance Metrics](#-performance-metrics)
-- [Internship Progress](#-internship-progress)
+- [Troubleshooting](#-troubleshooting)
 
 ---
 
-## 🎯 Objective
+## 🎯 What This Project Does
 
-Build an **AI-powered Solar & Wind Deployment Intelligence Platform** that recommends optimal locations for renewable energy projects by analyzing:
+The Solar & Wind Deployment Intelligence Platform helps analysts and energy planners decide **where** and **what type** of renewable energy to deploy. Given a geographic location (latitude / longitude), the platform:
 
-- 🌤️ **Environmental & climatic** factors (irradiance, wind speed, rainfall, temperature)
-- 🏔️ **Geographic & terrain** data (elevation, slope, land cover)
-- 🛰️ **Satellite imagery** (Sentinel-2 NDVI/NDWI land-use classification)
-- 🏗️ **Infrastructure proximity** (roads, substations, transmission lines)
-- 💰 **Economic feasibility** (ROI, investment scoring, capacity planning)
-
-The platform leverages **geospatial analytics, machine learning, optimization algorithms, and weather forecasting** to identify deployment hotspots, estimate energy generation potential, evaluate project feasibility, and support investment decisions.
-
-**Target Users:** Renewable energy companies · Government agencies · Utility providers · Environmental organizations · Infrastructure planners · Sustainability consultants
-
----
-
-## ✅ Key Outcomes
-
-- 🚀 Deployed AI-powered renewable energy intelligence platform
-- 🔐 Secure authentication with role-based access control (4 user roles)
-- 🌍 Geospatial and environmental data analysis workflows
-- ☀️💨 Solar and wind potential prediction ML models
-- 📍 Site suitability and deployment optimization engines
-- 📈 Energy generation forecasting and investment analytics
-- 🖥️ Role-specific dashboards for planners, analysts, and managers
-- 🐳 Docker containerization + AWS/Azure cloud deployment
+1. **Fetches real climate data** from NASA POWER API (solar irradiance, temperature, humidity)
+2. **Classifies the solar and wind resource quality** (Poor / Moderate / Good / Excellent)
+3. **Estimates capacity factors** using engineering rule tables (no black-box ML required)
+4. **Recommends a deployment strategy** — Solar, Wind, or Hybrid — with a confidence score and plain-English reason
+5. **Scores site suitability** across 5 weighted criteria (resource availability, terrain, infrastructure, environment, economics)
 
 ---
 
 ## 🏗️ System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           USER  (Browser)                               │
-│    Energy Planner │ GIS Analyst │ Project Manager │ Administrator        │
-└──────────────────────────────────┬──────────────────────────────────────┘
-                                   │  HTTPS
-                                   ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    FRONTEND  ·  React.js + Next.js  (Port 5173)         │
-│                                                                         │
-│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌──────────┐ ┌────────┐ │
-│  │ Auth/Login │ │  Dashboard │ │ Prediction │ │   Maps   │ │Reports │ │
-│  │  Register  │ │ Analytics  │ │Solar + Wind│ │ Leaflet/ │ │PDF/XLSX│ │
-│  └────────────┘ └────────────┘ └────────────┘ │  Mapbox  │ └────────┘ │
-│                                                └──────────┘            │
-└──────────────────────────────────┬──────────────────────────────────────┘
-                                   │  REST API (JSON)
-                                   ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    API GATEWAY  ·  FastAPI  (Port 8000)                 │
-│                                                                         │
-│  /auth    /projects   /sites    /solar     /wind                        │
-│  /site    /forecast   /optimize /score     /reports   /notifications    │
-└──────────────────┬────────────────────────────────────┬─────────────────┘
-                   │                                    │
-        ┌──────────┼──────────┐              ┌──────────┴───────────┐
-        ▼          ▼          ▼              ▼                      ▼
-┌─────────────┐ ┌─────────┐ ┌────────┐ ┌──────────────────┐ ┌──────────┐
-│  PostgreSQL │ │ MongoDB │ │ML/AI   │ │ Datasets & APIs  │ │  Docker  │
-│  + PostGIS  │ │(Docs/   │ │Models  │ │                  │ │  AWS /   │
-│  (Port 5432)│ │ Logs)   │ │XGBoost │ │ NASA POWER API   │ │  Azure   │
-│             │ │         │ │RandFrst│ │ Global Wind Atlas│ │          │
-│  users      │ │         │ │LGBM    │ │ Sentinel Hub     │ │  CI/CD   │
-│  predictions│ │         │ │TF/PyTch│ │ OpenWeather API  │ │ GH Actions│
-│  sites      │ │         │ └────────┘ │ OpenStreetMap    │ └──────────┘
-│  reports    │ └─────────┘            │ NASA SRTM        │
-└─────────────┘                        └──────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│              BROWSER (React + Vite, port 5173)                 │
+│  Login/Register → Dashboard → Projects → Site Analysis        │
+└───────────────────────────────┬────────────────────────────────┘
+                                │  REST / JSON  (Axios + JWT)
+                                ▼
+┌────────────────────────────────────────────────────────────────┐
+│              BACKEND API  (FastAPI, port 8000)                 │
+│                                                                │
+│  /api/v1/auth      – register, login, me, user list           │
+│  /api/v1/projects  – CRUD project management                  │
+│  /api/v1/solar     – solar features endpoint                  │
+│  /api/v1/wind      – wind prediction endpoint (stub)          │
+│  /api/v1/site      – spatial suitability analysis             │
+│  /api/v1/reports   – report generation (stub)                 │
+└──────────┬──────────────────────────┬──────────────────────────┘
+           │                          │
+           ▼                          ▼
+┌──────────────────┐      ┌──────────────────────────────────────┐
+│  PostgreSQL 15   │      │  External Data Sources               │
+│  + PostGIS       │      │                                      │
+│  (port 5433)     │      │  NASA POWER REST API (live)          │
+│                  │      │  Global Wind Atlas (planned)         │
+│  users           │      │  SRTM Elevation (planned)            │
+│  projects        │      │  OpenStreetMap (planned)             │
+│  solar_predicts  │      │  Sentinel-2 Imagery (planned)        │
+│  wind_predicts   │      └──────────────────────────────────────┘
+│  site_analyses   │
+│  reports         │      ┌──────────────────────────────────────┐
+└──────────────────┘      │  Business Logic Services             │
+                          │                                      │
+                          │  solar_assessment.py                 │
+                          │  wind_assessment.py                  │
+                          │  deployment_strategy.py              │
+                          │  feature_builder.py                  │
+                          │  spatial/analysis_coordinator.py     │
+                          └──────────────────────────────────────┘
 ```
 
 ### Layered Architecture
 
 ```
-╔═══════════════════════════════════════════════════════════════════╗
-║              PRESENTATION LAYER  (React.js + Next.js)             ║
-║  Energy Planner │ GIS Analyst │ Project Manager │ Admin Dashboards ║
-╠═══════════════════════════════════════════════════════════════════╣
-║              API GATEWAY LAYER  (FastAPI + JWT/OAuth2)            ║
-║  /auth │ /projects │ /solar │ /wind │ /site │ /forecast │ /reports ║
-╠═══════════════════════════════════════════════════════════════════╣
-║              BUSINESS LOGIC LAYER  (Services)                     ║
-║  AuthSvc │ SolarSvc │ WindSvc │ SiteSvc │ ForecastSvc │ OptimizeSvc║
-╠═══════════════════════════════════════════════════════════════════╣
-║              ML / AI LAYER                                        ║
-║  XGBoost │ Random Forest │ LightGBM │ TensorFlow │ PyTorch        ║
-╠═══════════════════════════════════════════════════════════════════╣
-║              DATA ACCESS LAYER  (SQLAlchemy ORM + PyMongo)        ║
-║  Models │ Schemas │ Queries │ GIS Processing (GeoPandas/Rasterio) ║
-╠═══════════════════════════════════════════════════════════════════╣
-║              INFRASTRUCTURE LAYER  (Docker + Cloud)               ║
-║  PostgreSQL+PostGIS │ MongoDB │ Datasets (CSV/GeoTIFF/Shapefile)  ║
-╚═══════════════════════════════════════════════════════════════════╝
+╔══════════════════════════════════════════════════════════╗
+║  PRESENTATION  –  React 18 + Vite + React Router v6      ║
+║  Login · Register · Dashboard · Projects · Site Analysis ║
+╠══════════════════════════════════════════════════════════╣
+║  API GATEWAY   –  FastAPI + JWT OAuth2                   ║
+║  /auth · /projects · /solar · /wind · /site · /reports   ║
+╠══════════════════════════════════════════════════════════╣
+║  BUSINESS LOGIC SERVICES                                 ║
+║  SolarAssessment · WindAssessment · DeploymentStrategy   ║
+║  FeatureBuilder · SpatialAnalysisService                 ║
+╠══════════════════════════════════════════════════════════╣
+║  DATA ACCESS   –  SQLAlchemy 2.0 ORM + Pydantic schemas  ║
+║  User · SolarPrediction · WindPrediction · SiteAnalysis  ║
+╠══════════════════════════════════════════════════════════╣
+║  INFRASTRUCTURE                                          ║
+║  PostgreSQL 15 + PostGIS · NASA POWER API · Docker       ║
+╚══════════════════════════════════════════════════════════╝
 ```
-
----
-
-## 🧩 Modules
-
-### Module 1 · 🔐 User Authentication & Role-Based Access
-
-Handles all identity, access, and session management for the platform.
-
-- User registration, login, and profile management
-- JWT authentication + OAuth2 login (Google/GitHub)
-- Role-based access control (RBAC)
-- Secure password hashing with bcrypt
-
-**User Roles:**
-
-| Role | Access Level |
-|---|---|
-| 🌞 **Renewable Energy Planner** | Site recommendations, forecasts, investment reports |
-| 🗺️ **GIS Analyst** | Geospatial visualizations, terrain maps, environmental analytics |
-| 📋 **Project Manager** | Project progress, feasibility reports, timelines, cost-benefit |
-| ⚙️ **Administrator** | User management, platform analytics, system monitoring |
-
----
-
-### Module 2 · 📂 Project & Site Management
-
-Manages the full lifecycle of renewable energy projects and site registrations.
-
-- Project creation and region management
-- Site registration and comparison
-- Deployment history tracking
-
-**Site Information Fields:**
-
-| Field | Description |
-|---|---|
-| Project ID | Unique project identifier |
-| Geographic Coordinates | Latitude / Longitude |
-| Region | Administrative region |
-| Land Area | Area in hectares |
-| Elevation | Height above sea level (m) |
-| Existing Infrastructure | Roads, substations, transmission lines |
-| Land Ownership | Public / Private / Government |
-
----
-
-### Module 3 · 🌦️ Environmental Data Collection Engine
-
-Collects, processes, and integrates real-world environmental data from multiple sources.
-
-- Weather data collection (NASA POWER, OpenWeather)
-- Satellite image processing (Sentinel-2)
-- Terrain analysis (SRTM DEM)
-- Climate data integration and geographic information analysis
-
-**Environmental Factors Tracked:**
-
-`Solar Irradiance` · `Wind Speed & Direction` · `Temperature` · `Rainfall` · `Cloud Cover` · `Elevation` · `Land Slope` · `Vegetation Index (NDVI)`
-
----
-
-### Module 4 · 🗺️ Geographic Intelligence Engine
-
-Processes geospatial data to assess site accessibility and land suitability.
-
-- GIS data processing with GeoPandas, GDAL, Rasterio
-- Terrain mapping and slope analysis
-- Infrastructure proximity analysis
-- Land suitability assessment
-
-**Geographic Features Analyzed:**
-
-`Roads` · `Transmission Lines` · `Substations` · `Urban Areas` · `Protected Zones` · `Water Bodies` · `Agricultural Land`
-
----
-
-### Module 5 · ☀️ Solar Potential Prediction Engine
-
-Estimates solar energy generation capacity for any geographic location.
-
-- Solar energy estimation from NASA POWER irradiance data
-- Panel efficiency and tilt optimization
-- Seasonal energy forecasting
-- Shading analysis and solar resource mapping
-
-**Solar Metrics Predicted:**
-
-| Metric | Description |
-|---|---|
-| Annual Irradiance | kWh/m²/year |
-| Peak Sun Hours | Hours/day of optimal irradiance |
-| Expected Energy Output | MWh/year for a given installation |
-| Capacity Factor | Actual vs. rated output ratio |
-| Performance Ratio | System efficiency (%) |
-
----
-
-### Module 6 · 💨 Wind Potential Prediction Engine
-
-Assesses wind resource quality and turbine energy output.
-
-- Wind resource assessment from Global Wind Atlas data
-- Turbine suitability and hub-height analysis
-- Wind power density estimation
-- Seasonal wind forecasting and resource mapping
-
-**Wind Metrics Predicted:**
-
-| Metric | Description |
-|---|---|
-| Average Wind Speed | m/s at 10m / 50m / 100m height |
-| Wind Power Density | W/m² |
-| Turbulence Intensity | Stability and reliability index |
-| Capacity Factor | Actual vs. rated output ratio |
-| Expected Annual Energy Production | MWh/year per turbine |
-
----
-
-### Module 7 · 📍 Site Suitability Intelligence Engine
-
-Combines all prediction engines into a unified suitability assessment.
-
-- Multi-factor site ranking and scoring
-- Deployment feasibility assessment
-- Environmental impact evaluation
-- Investment prioritization
-
-**Suitability Factors:**
-
-`Renewable Resource Availability` · `Terrain Suitability` · `Infrastructure Accessibility` · `Environmental Constraints` · `Economic Viability`
-
----
-
-### Module 8 · 📈 Energy Forecasting Engine
-
-Provides short-term and long-term energy production forecasts.
-
-- Energy production forecasting (daily / weekly / monthly)
-- Seasonal generation prediction
-- Long-term energy estimation (20–25 year horizon)
-- Grid contribution forecasting
-- Revenue prediction and cash-flow modeling
-
----
-
-### Module 9 · 🔧 Deployment Optimization Engine
-
-Recommends the best configuration for renewable energy deployment.
-
-- Optimal location recommendation using AI
-- Technology selection (solar panels vs. wind turbines vs. hybrid)
-- Capacity planning and layout optimization
-- Hybrid solar-wind system recommendations
-- Expansion planning for existing sites
-
----
-
-### Module 10 · 🏆 Site Scoring Engine
-
-Aggregates all analysis factors into a single, interpretable score.
-
-*(See [Site Scoring Engine](#-site-scoring-engine) section below for the full scoring model)*
-
----
-
-### Module 11 · 🖥️ Dashboard & Analytics
-
-Role-specific dashboards for all user types.
-
-| Dashboard | Key Features |
-|---|---|
-| 🌞 **Energy Planner** | Recommended sites · Forecasts · Suitability scores · Investment recommendations |
-| 🗺️ **GIS Analyst** | GIS visualization · Environmental analytics · Terrain maps · Site comparison reports |
-| 📋 **Project Manager** | Project progress · Feasibility reports · Cost-benefit analysis · Deployment timelines |
-| ⚙️ **Admin** | User management · Platform analytics · Data source management · System monitoring |
-
----
-
-### Module 12 · 🔔 Notification & Alert System
-
-Keeps users informed of critical events and changes.
-
-- ⛈️ Weather alerts for monitored regions
-- 📊 Site suitability score updates
-- ⚠️ Environmental risk alerts
-- 🔄 Forecast update notifications
-- 📬 Project status notifications
-
----
-
-### Module 13 · 📄 Reports & Export System
-
-Generates comprehensive, downloadable reports for stakeholders.
-
-- Site assessment reports
-- Solar potential reports
-- Wind potential reports
-- Feasibility reports
-- Investment analysis reports
-- **Export formats:** PDF · Excel (XLSX)
-
----
-
-### Module 14 · 🚢 Final Integration, Testing & Deployment
-
-Production-readiness and platform hardening.
-
-- Frontend ↔ Backend integration
-- API validation and end-to-end testing
-- Security penetration testing
-- Performance optimization
-- Docker containerization
-- Cloud deployment (AWS / Azure)
-- Monitoring, logging, and alerting setup
-- Documentation and user guides
-
----
-
-## 🏆 Site Scoring Engine
-
-### Weighted Scoring Model
-
-$$\text{Deployment Suitability Score} = \sum w_i \times f_i$$
-
-| Factor | Weight | Description |
-|---|---|---|
-| ☀️ **Renewable Resource Availability** | **35%** | Solar irradiance + wind speed potential |
-| 🏔️ **Geographic Suitability** | **25%** | Terrain, slope, elevation, land cover |
-| 🏗️ **Infrastructure Accessibility** | **15%** | Distance to roads, substations, grid |
-| 🌿 **Environmental Impact** | **15%** | Protected zones, water bodies, NDVI |
-| 💰 **Economic Feasibility** | **10%** | Land cost, ROI potential, grid tariff |
-
-### Suitability Categories
-
-| Score Range | Category | Action |
-|---|---|---|
-| 85 – 100 | 🟢 **Excellent** | Immediate deployment recommended |
-| 70 – 84 | 🟩 **Highly Suitable** | Strong candidate, proceed with detailed feasibility |
-| 50 – 69 | 🟡 **Moderately Suitable** | Viable with mitigation measures |
-| 30 – 49 | 🟠 **Low Suitability** | Significant constraints, review alternatives |
-| 0 – 29 | 🔴 **Unsuitable** | Not recommended for deployment |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Frontend** | React.js, Next.js, Tailwind CSS | UI, routing, styling |
-| **Backend API** | FastAPI (Python) | REST endpoints, request routing |
-| **Authentication** | JWT + OAuth2 + bcrypt | Secure, stateless auth |
-| **ORM** | SQLAlchemy 2.0 | PostgreSQL database abstraction |
-| **Primary Database** | PostgreSQL + PostGIS | Relational + geospatial data |
-| **Secondary Database** | MongoDB | Documents, logs, unstructured data |
-| **ML Models** | XGBoost, Random Forest, LightGBM, TensorFlow, PyTorch | Prediction & forecasting |
-| **Data Analytics** | Scikit-learn, Pandas, NumPy | Model training & data processing |
-| **GIS / Remote Sensing** | QGIS, GDAL, Rasterio, GeoPandas, Shapely | Spatial data processing |
-| **Visualization** | Plotly, Leaflet.js, Mapbox, Chart.js | Maps & interactive charts |
-| **Satellite / Weather APIs** | NASA POWER, OpenWeather, Sentinel Hub, OSM | Data ingestion |
-| **Migrations** | Alembic | Database versioning |
-| **Containers** | Docker + Docker Compose | Portable deployment |
-| **Cloud** | AWS / Azure | Production hosting |
-| **CI/CD** | GitHub Actions | Automated testing & deployment |
-| **Dev Tools** | VS Code, Git, Postman | Development workflow |
-
----
-
-## 🗂️ Dataset Sources
-
-| Dataset | Provider | Format | Key Purpose |
+| Layer | Technology | Version | Purpose |
 |---|---|---|---|
-| **NASA POWER** | NASA Langley | CSV / REST API | Solar irradiance, temperature, humidity, climate |
-| **Global Wind Atlas** | DTU / World Bank | GeoTIFF / REST API | Wind speed at 10m / 50m / 100m heights |
-| **NASA SRTM** | NASA / USGS | GeoTIFF (DEM) | Elevation mapping, slope & terrain analysis |
-| **OpenStreetMap (OSM)** | OSM Community | Shapefile / PBF | Road networks, infrastructure, urban areas |
-| **Copernicus Sentinel-2** | ESA | GeoTIFF / Sentinel Hub | Land cover, NDVI/NDWI, environmental monitoring |
-| **OpenWeather API** | OpenWeather | JSON / REST API | Real-time weather data & alerts |
+| **Frontend** | React.js | 18.3 | UI components |
+| **Frontend Build** | Vite | 5.4 | Dev server & bundler |
+| **Frontend Routing** | React Router DOM | 6.26 | Client-side routing |
+| **HTTP Client** | Axios | 1.7 | API calls + JWT interceptors |
+| **Backend API** | FastAPI | 0.111+ | REST endpoints |
+| **ASGI Server** | Uvicorn | 0.30+ | Run the FastAPI app |
+| **ORM** | SQLAlchemy | 2.0+ | PostgreSQL access |
+| **Migrations** | Alembic | 1.13+ | DB schema versioning |
+| **Auth** | python-jose + passlib | latest | JWT + bcrypt hashing |
+| **Database** | PostgreSQL | 15 + PostGIS | Relational + spatial |
+| **GIS** | GeoPandas, Rasterio, Shapely | latest | Spatial processing |
+| **ML / Data** | Scikit-learn, Pandas, NumPy | latest | Feature engineering |
+| **External APIs** | NASA POWER (httpx) | latest | Solar irradiance data |
+| **Config** | pydantic-settings | 2.3+ | .env file loading |
+| **Testing** | pytest | 8.2+ | Unit tests |
+| **Containers** | Docker + Docker Compose | latest | DB containerisation |
 
 ---
 
@@ -420,352 +150,656 @@ $$\text{Deployment Suitability Score} = \sum w_i \times f_i$$
 ```
 solar-wind-deployment-intelligence/
 │
-├── backend/                            # FastAPI server-side application
+├── backend/
 │   ├── app/
-│   │   ├── api/                        # Route handlers
-│   │   │   ├── auth.py                 # /auth endpoints
-│   │   │   ├── solar.py                # /solar/predict
-│   │   │   ├── wind.py                 # /wind/predict
-│   │   │   ├── site.py                 # /site/analyze, /site/score
-│   │   │   ├── reports.py              # /reports/generate
-│   │   │   ├── projects.py             # /projects CRUD
-│   │   │   └── notifications.py        # /notifications
-│   │   ├── auth/                       # JWT + OAuth2 logic
-│   │   ├── database/                   # PostgreSQL + MongoDB connections
-│   │   ├── models/                     # SQLAlchemy ORM models
-│   │   ├── schemas/                    # Pydantic request/response schemas
-│   │   ├── services/                   # Business logic
-│   │   │   ├── solar_service.py
-│   │   │   ├── wind_service.py
-│   │   │   ├── site_suitability.py
-│   │   │   ├── forecasting.py
-│   │   │   └── optimization.py
-│   │   └── utils/                      # Helper functions, GIS utilities
-│   ├── alembic/                        # Database migrations
-│   ├── tests/                          # Unit & integration tests
-│   ├── main.py                         # Application entry point
-│   └── requirements.txt
+│   │   ├── api/                          # FastAPI route handlers
+│   │   │   ├── auth.py                   # POST /auth/register, /login, GET /me
+│   │   │   ├── projects.py               # Full CRUD for projects
+│   │   │   ├── solar.py                  # GET /solar/features (live NASA call)
+│   │   │   ├── wind.py                   # POST /wind/predict (stub – Milestone 2)
+│   │   │   ├── site.py                   # POST /site/analyze (spatial scoring)
+│   │   │   └── reports.py                # Report generation (stub)
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── security.py               # JWT creation, bcrypt hashing
+│   │   │   ├── dependencies.py           # get_current_user() dependency
+│   │   │   └── roles.py                  # require_admin(), require_analyst_or_admin()
+│   │   │
+│   │   ├── data_sources/
+│   │   │   ├── nasa_power.py             # Live NASA POWER API client
+│   │   │   ├── global_wind_atlas.py      # GWA client (stub)
+│   │   │   ├── srtm.py                   # SRTM elevation client (stub)
+│   │   │   └── osm.py                    # OpenStreetMap client (stub)
+│   │   │
+│   │   ├── database/
+│   │   │   └── database.py               # SQLAlchemy engine + SessionLocal
+│   │   │
+│   │   ├── models/                       # SQLAlchemy ORM table definitions
+│   │   │   ├── user.py
+│   │   │   ├── solar_prediction.py
+│   │   │   ├── wind_prediction.py
+│   │   │   ├── site_analysis.py
+│   │   │   ├── project.py
+│   │   │   └── report.py
+│   │   │
+│   │   ├── schemas/                      # Pydantic request/response models
+│   │   │   ├── user.py
+│   │   │   ├── solar.py
+│   │   │   ├── wind.py
+│   │   │   ├── site.py
+│   │   │   ├── project.py
+│   │   │   └── report.py
+│   │   │
+│   │   ├── services/                     # Business logic (no DB, no HTTP)
+│   │   │   ├── solar_assessment.py       # ✅ Solar classification & capacity factor
+│   │   │   ├── wind_assessment.py        # ✅ Wind classification & capacity factor
+│   │   │   ├── deployment_strategy.py    # ✅ Solar/Wind/Hybrid recommendation
+│   │   │   ├── feature_builder.py        # Orchestrates data source clients
+│   │   │   └── spatial/
+│   │   │       ├── analysis_coordinator.py  # Suitability scoring coordinator
+│   │   │       ├── raster_processor.py      # GeoTIFF raster processing
+│   │   │       └── vector_processor.py      # Shapefile vector processing
+│   │   │
+│   │   ├── utils/
+│   │   │   └── coordinates.py            # Coordinate validation helpers
+│   │   │
+│   │   ├── config.py                     # Pydantic settings (reads .env)
+│   │   └── main.py                       # FastAPI app + router registration
+│   │
+│   ├── alembic/                          # Database migration scripts
+│   ├── tests/
+│   │   ├── test_coordinates.py           # Coordinate validation tests
+│   │   ├── test_solar_features.py        # NASA POWER client tests
+│   │   └── test_wind_solar_deployment.py # ✅ 140 tests for all new services
+│   ├── .env                              # Local environment variables
+│   ├── requirements.txt                  # Python dependencies
+│   └── Dockerfile                        # Backend container definition
 │
-├── frontend/                           # React + Next.js user interface
+├── frontend/
 │   ├── src/
-│   │   ├── App.jsx                     # Root component
-│   │   ├── pages/                      # Next.js pages / React routes
-│   │   ├── components/                 # Reusable UI components
-│   │   ├── services/api.js             # Axios API client
-│   │   └── index.css                   # Global styles (Tailwind CSS)
+│   │   ├── App.jsx                       # Root component + all routes
+│   │   ├── main.jsx                      # ReactDOM.createRoot entry point
+│   │   ├── index.css                     # Global design system styles
+│   │   ├── App.css                       # Layout styles
+│   │   ├── pages/
+│   │   │   ├── LoginPage.jsx             # /login
+│   │   │   ├── RegisterPage.jsx          # /register
+│   │   │   ├── DashboardPage.jsx         # /dashboard (protected)
+│   │   │   ├── ProjectsPage.jsx          # /projects (protected) – full CRUD
+│   │   │   └── SiteAnalysisPage.jsx      # /site-analysis
+│   │   ├── components/
+│   │   │   ├── Sidebar.jsx               # Navigation sidebar
+│   │   │   └── ProtectedRoute.jsx        # Auth guard component
+│   │   └── services/
+│   │       └── api.js                    # Axios instance + auth/project helpers
+│   ├── index.html
+│   ├── vite.config.js
 │   └── package.json
 │
-├── datasets/                           # Source datasets
-│   ├── nasa_power/                     # Solar irradiance & climate CSV
-│   ├── global_wind_atlas/              # Wind GeoTIFF rasters
-│   ├── sentinel/                       # Sentinel-2 imagery
-│   ├── openstreetmap/                  # OSM shapefiles
-│   └── srtm/                          # DEM elevation GeoTIFF
+├── datasets/                             # Source data (gitignored for large files)
+│   ├── nasa_power/
+│   ├── global_wind_atlas/
+│   ├── sentinel/
+│   ├── openstreetmap/
+│   └── srtm/
 │
-├── ml_models/                          # Trained model artifacts
-│   ├── solar_model.pkl
-│   ├── wind_model.pkl
-│   └── site_suitability_model.pkl
-│
-├── notebooks/                          # EDA and model development
-│   ├── dataset_analysis.ipynb
-│   └── day2_complete_analysis.ipynb
-│
-├── docs/                               # Project documentation
-│   ├── architecture/project_architecture.md
-│   ├── database/database_design.md
-│   └── module_mapping.md
-│
-├── reports/                            # Generated PDF / Excel reports
-├── docker/                             # Docker configurations
-├── docker-compose.yml                  # Multi-container orchestration
-├── requirements.txt                    # Root Python dependencies
-└── README.md
+├── models/                               # Trained ML model artifacts (.joblib)
+├── notebooks/                            # Jupyter EDA notebooks
+├── docs/                                 # Architecture & design docs
+├── reports/                              # Generated PDF/Excel reports (output)
+├── docker-compose.yml                    # PostgreSQL + PostGIS container
+└── README.md                             # This file
 ```
+
+---
+
+## ✅ Prerequisites
+
+Before you begin, make sure you have the following installed:
+
+| Tool | Minimum Version | Download |
+|---|---|---|
+| **Python** | 3.10+ | https://python.org |
+| **Node.js** | 18+ | https://nodejs.org |
+| **npm** | 9+ | Bundled with Node.js |
+| **PostgreSQL** | 15+ | https://postgresql.org OR use Docker |
+| **Git** | any | https://git-scm.com |
+| **Docker** *(optional)* | 24+ | https://docker.com |
+
+> **Windows users:** All commands below use PowerShell. Replace `./venv/Scripts/Activate.ps1` with the appropriate activation script if you're in CMD.
+
+---
+
+## 🚀 Quick Start (Running Locally)
+
+### Step 1 – Clone the Repository
+
+```powershell
+git clone https://github.com/Smita-Mhatugade/Solar_and_Wind_Deployment_Intelligence_Platform.git
+cd "Solar_and_Wind_Deployment_Intelligence_Platform"
+cd "solar-wind-deployment-intelligence"
+```
+
+---
+
+### Step 2 – Set Up PostgreSQL
+
+You have two options:
+
+#### Option A — Use Docker (Recommended, zero config)
+
+```powershell
+# From the project root (solar-wind-deployment-intelligence/)
+docker-compose up -d
+```
+
+This starts a **PostgreSQL 15 + PostGIS** container on port **5432**.
+
+> Default credentials: `postgres` / `postgres`, database: `solar_wind_db`
+
+#### Option B — Use an Existing Local PostgreSQL
+
+1. Open **pgAdmin** or `psql` and create the database:
+   ```sql
+   CREATE DATABASE solar_wind_db;
+   ```
+2. Note your PostgreSQL host, port, username, and password for the `.env` file below.
+
+> **Note:** This project currently uses port **5433** in its `.env`. If your local PostgreSQL runs on port **5432**, update `POSTGRES_PORT` accordingly.
+
+---
+
+### Step 3 – Backend Setup
+
+```powershell
+# Navigate to the backend folder
+cd backend
+
+# Create a virtual environment
+python -m venv venv
+
+# Activate the virtual environment
+.\venv\Scripts\Activate.ps1
+
+# Install all Python dependencies
+pip install -r requirements.txt
+```
+
+#### Configure Environment Variables
+
+The `.env` file in `backend/` already exists and is pre-filled. **Review and update** these values to match your PostgreSQL setup:
+
+```env
+# backend/.env  (already present — just verify these values)
+
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5433/solar_wind_db
+POSTGRES_DB=solar_wind_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=YOUR_PASSWORD
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5433           # Change to 5432 if using Docker or default PG port
+
+JWT_SECRET_KEY=your-jwt-secret-key-change-in-production
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+> ⚠️ **Never commit your real `.env` file to version control.**
+
+#### Start the Backend Server
+
+```powershell
+# Still inside backend/, with venv activated
+uvicorn app.main:app --reload --port 8000
+```
+
+You should see output like:
+```
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process
+INFO:     Application startup complete.
+```
+
+**Backend URLs:**
+| URL | Purpose |
+|---|---|
+| `http://localhost:8000` | API root / health check |
+| `http://localhost:8000/docs` | Swagger UI (interactive API docs) |
+| `http://localhost:8000/redoc` | ReDoc API docs |
+| `http://localhost:8000/ping` | Liveness check |
+| `http://localhost:8000/db-health` | Database connection check |
+
+---
+
+### Step 4 – Frontend Setup
+
+Open a **new terminal window** (keep the backend running in the first one).
+
+```powershell
+# Navigate to frontend (from project root)
+cd frontend
+
+# Install Node.js dependencies
+npm install
+
+# Start the Vite development server
+npm run dev
+```
+
+You should see:
+```
+  VITE v5.x  ready in XXX ms
+
+  ➜  Local:   http://localhost:5173/
+```
+
+**Frontend URL:** `http://localhost:5173`
+
+---
+
+### Step 5 – Verify Everything Works
+
+Open your browser and go to:
+
+1. **`http://localhost:5173`** → redirects to `/login`
+2. Click **"Register"** to create a new account
+3. Log in with your new credentials
+4. The dashboard should load with your user name and role badge
+
+Also verify the backend:
+- `http://localhost:8000/docs` → Swagger should show all endpoints
+- `http://localhost:8000/db-health` → should return `{"status":"ok","database":"connected"}`
+
+---
+
+## 🔐 Environment Variables Reference
+
+All variables live in `backend/.env`. Here is the complete reference:
+
+| Variable | Default | Description |
+|---|---|---|
+| `APP_NAME` | `Solar & Wind...` | Application display name |
+| `APP_VERSION` | `1.0.0` | API version string |
+| `DEBUG` | `True` | Enable debug mode |
+| `SECRET_KEY` | *(set this)* | App-level secret |
+| `DATABASE_URL` | *(see below)* | Full PostgreSQL connection string |
+| `POSTGRES_DB` | `solar_wind_db` | Database name |
+| `POSTGRES_USER` | `postgres` | DB username |
+| `POSTGRES_PASSWORD` | *(set this)* | DB password |
+| `POSTGRES_HOST` | `localhost` | DB host |
+| `POSTGRES_PORT` | `5433` | DB port |
+| `JWT_SECRET_KEY` | *(set this)* | Key for signing JWT tokens |
+| `JWT_ALGORITHM` | `HS256` | JWT signing algorithm |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | `30` | JWT token lifetime |
+| `API_V1_STR` | `/api/v1` | API prefix |
+
+> **DATABASE_URL format:** `postgresql://USER:PASSWORD@HOST:PORT/DBNAME`
 
 ---
 
 ## 📡 API Reference
 
-All endpoints are prefixed with `/api/v1/`. Interactive docs: `http://localhost:8000/docs`
+All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localhost:8000/docs` to try them interactively.
 
-### 🔐 Authentication
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/auth/register` | Register a new user |
-| `POST` | `/auth/login` | Obtain JWT access token |
-| `POST` | `/auth/oauth2` | OAuth2 login (Google/GitHub) |
-| `GET` | `/auth/me` | Get current user profile |
+### 🔐 Authentication — `/auth`
 
-### 📂 Projects & Sites
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/projects/` | Create a new project |
-| `GET` | `/projects/` | List all projects |
-| `POST` | `/sites/register` | Register a new site |
-| `GET` | `/sites/compare` | Compare multiple sites |
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| `POST` | `/auth/register` | ❌ Public | Register a new user account |
+| `POST` | `/auth/login` | ❌ Public | Login; returns JWT access token |
+| `GET` | `/auth/me` | ✅ Any role | Get current user profile |
+| `GET` | `/auth/users` | 🔒 Admin only | List all registered users |
+| `PUT` | `/auth/users/{id}/role` | 🔒 Admin only | Change a user's role |
 
-### ☀️ Predictions
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/solar/predict` | Solar energy yield for coordinates |
-| `POST` | `/wind/predict` | Wind energy yield for coordinates |
-| `POST` | `/site/analyze` | Full site suitability analysis |
-| `GET` | `/site/score` | Get weighted suitability score (0–100) |
-
-### 📈 Forecasting & Optimization
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/forecast/energy` | Long-term energy production forecast |
-| `POST` | `/optimize/location` | AI-powered optimal location recommendation |
-| `POST` | `/optimize/hybrid` | Hybrid solar-wind system recommendation |
-
-### 📄 Reports & Notifications
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/reports/generate` | Export site report (PDF / Excel) |
-| `GET` | `/notifications/` | Get user notifications and alerts |
-
-> 🔒 All prediction, optimization, and report endpoints require a valid `Bearer` JWT token in the `Authorization` header.
+**Login response example:**
+```json
+{
+  "access_token": "eyJhbGci...",
+  "token_type": "bearer",
+  "user_id": 1,
+  "email": "user@example.com",
+  "full_name": "Smita Mhatugade",
+  "role": "user"
+}
+```
 
 ---
 
-## 🚀 Getting Started
+### 📂 Projects — `/projects`
 
-### Prerequisites
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| `GET` | `/projects` | ✅ Any role | List all my projects |
+| `POST` | `/projects` | ✅ Any role | Create a new project |
+| `GET` | `/projects/{id}` | ✅ Owner or Admin | Get project by ID |
+| `PUT` | `/projects/{id}` | ✅ Owner or Admin | Update a project |
+| `DELETE` | `/projects/{id}` | ✅ Owner or Admin | Delete a project |
 
-- [Python 3.10+](https://python.org)
-- [Node.js 18+](https://nodejs.org)
-- [Docker & Docker Compose](https://docker.com)
-- [Git](https://git-scm.com)
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Smita-Mhatugade/Solar_and_Wind_Deployment_Intelligence_Platform.git
-cd Solar_and_Wind_Deployment_Intelligence_Platform
+**Create project request body:**
+```json
+{
+  "project_name": "Rajasthan Wind Farm",
+  "description": "Wind feasibility study for western Rajasthan",
+  "state": "Rajasthan",
+  "latitude": 26.9124,
+  "longitude": 70.9123
+}
 ```
 
-### 2. Start Databases (Docker)
+---
 
-```bash
-docker-compose up -d
+### ☀️ Solar — `/solar`
+
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| `GET` | `/solar/features?latitude=&longitude=` | ❌ Public | Fetch live solar irradiance from NASA POWER API |
+| `POST` | `/solar/predict` | 🔒 Analyst/Admin | Solar energy yield prediction *(Milestone 2)* |
+| `GET` | `/solar/history` | ✅ Any role | User's solar prediction history *(Milestone 2)* |
+
+**Solar features response example:**
+```json
+{
+  "solar_irradiance": 5.8,
+  "temperature": 28.4,
+  "relative_humidity": 42.1
+}
 ```
 
-Starts **PostgreSQL + PostGIS** on port `5432` and **MongoDB** on port `27017`.
+---
 
-### 3. Backend Setup
+### 💨 Wind — `/wind`
 
-```bash
-cd backend
-pip install -r requirements.txt
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| `POST` | `/wind/predict` | 🔒 Analyst/Admin | Wind energy yield prediction *(Milestone 2)* |
+| `GET` | `/wind/history` | ✅ Any role | User's wind prediction history *(Milestone 2)* |
 
-# Copy and configure environment variables
-cp .env.example .env
+---
 
-# Run database migrations
-alembic upgrade head
+### 📍 Site Analysis — `/site`
 
-# Start the FastAPI server
-uvicorn main:app --reload --port 8000
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| `POST` | `/site/analyze` | ❌ Public (temp) | Run spatial suitability analysis for lat/lon |
+| `GET` | `/site/history` | ✅ Any role | Site analysis history *(Milestone 2)* |
+
+**Site analyze request body:**
+```json
+{
+  "latitude": 26.9124,
+  "longitude": 70.9123
+}
 ```
 
-- Backend API → `http://localhost:8000`
-- Swagger Docs → `http://localhost:8000/docs`
-- ReDoc → `http://localhost:8000/redoc`
-
-### 4. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
+**Site analyze response example:**
+```json
+{
+  "site_id": 1,
+  "latitude": 26.9124,
+  "longitude": 70.9123,
+  "overall_score": 87.5,
+  "recommendation": "Highly Suitable",
+  "criteria_evaluation": {
+    "solar_irradiance": { "value": 5.9, "status": "Pass" },
+    "wind_speed":       { "value": 7.2, "status": "Pass" },
+    "slope":            { "value": 4.0, "status": "Pass" },
+    "distance_to_grid": { "value": 1.8, "status": "Pass" },
+    "distance_to_road": { "value": 0.45,"status": "Pass" }
+  },
+  "constraints": { "protected_area": false, "water_body": false },
+  "remarks": ["High solar potential.", "Good road accessibility."]
+}
 ```
 
-Frontend → `http://localhost:5173`
+---
 
-### 5. Environment Variables
+### 📊 Reports — `/reports`
 
-Create a `.env` file in the `backend/` directory:
+| Method | Endpoint | Auth Required | Description |
+|---|---|---|---|
+| `POST` | `/reports/generate` | 🔒 Analyst/Admin | Generate PDF/Excel report *(Milestone 2)* |
 
-```env
-# Database
-DATABASE_URL=postgresql://postgres:password@localhost:5432/solarwind_db
-MONGO_URL=mongodb://localhost:27017/solarwind_logs
+---
 
-# Auth
-SECRET_KEY=your-super-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+### ❤️ Health Checks
 
-# External APIs
-NASA_POWER_API_KEY=your-nasa-power-key
-OPENWEATHER_API_KEY=your-openweather-key
-SENTINEL_HUB_CLIENT_ID=your-sentinel-client-id
-SENTINEL_HUB_CLIENT_SECRET=your-sentinel-secret
-MAPBOX_TOKEN=your-mapbox-token
-```
-
-### 6. Production Deployment (Docker)
-
-```bash
-# Build and run all services
-docker-compose -f docker-compose.prod.yml up --build -d
-```
+| URL | Description |
+|---|---|
+| `GET /` | App name, version, status |
+| `GET /ping` | Liveness probe |
+| `GET /health` | Health status |
+| `GET /db-health` | Database connection status |
+| `GET /db-status` | Table record counts |
 
 ---
 
 ## 🗃️ Database Schema
 
 ```
-┌──────────────────┐       ┌──────────────────────┐   ┌──────────────────────┐
-│      users       │       │   solar_predictions  │   │   wind_predictions   │
-│ ──────────────── │       │ ──────────────────── │   │ ──────────────────── │
-│ id (PK)          │◄──────│ user_id (FK)         │   │ user_id (FK)    ─────┤►users
-│ email            │       │ id (PK)              │   │ id (PK)              │
-│ password_hash    │       │ latitude             │   │ latitude             │
-│ full_name        │       │ longitude            │   │ longitude            │
-│ role             │       │ irradiance_kwh       │   │ wind_speed_ms        │
-│ created_at       │       │ predicted_output_kwh │   │ predicted_output_kwh │
-│ is_active        │       │ capacity_factor      │   │ capacity_factor      │
-└──────────────────┘       │ created_at           │   │ created_at           │
-         ▲                 └──────────────────────┘   └──────────────────────┘
-         │
-         │  ┌──────────────────────┐   ┌──────────────────────┐
-         │  │    site_analyses     │   │       projects       │
-         └──│ user_id (FK)         │   │ ──────────────────── │
-            │ id (PK)              │   │ id (PK)              │
-            │ project_id (FK) ─────┼──►│ name                 │
-            │ latitude             │   │ region               │
-            │ longitude            │   │ user_id (FK)    ─────┼─►users
-            │ suitability_score    │   │ created_at           │
-            │ elevation_m          │   └──────────────────────┘
-            │ slope_deg            │
-            │ dist_grid_km         │   ┌──────────────────────┐
-            │ ndvi_index           │   │       reports        │
-            │ land_cover_type      │   │ ──────────────────── │
-            │ solar_score          │   │ id (PK)              │
-            │ wind_score           │   │ site_id (FK)    ─────┼─►site_analyses
-            │ infra_score          │   │ user_id (FK)    ─────┼─►users
-            │ invest_score         │   │ format (PDF/XLSX)    │
-            │ overall_score        │   │ file_path            │
-            │ created_at           │   │ created_at           │
-            └──────────────────────┘   └──────────────────────┘
+users
+  id            SERIAL PK
+  email         VARCHAR(255) UNIQUE NOT NULL
+  password_hash VARCHAR(255) NOT NULL
+  full_name     VARCHAR(255)
+  role          VARCHAR(50)  DEFAULT 'user'   -- 'admin' | 'analyst' | 'user'
+  is_active     BOOLEAN      DEFAULT TRUE
+  created_at    TIMESTAMP    DEFAULT NOW()
+  updated_at    TIMESTAMP
+
+projects (FK → users)
+  id            SERIAL PK
+  user_id       INTEGER FK → users.id  CASCADE DELETE
+  project_name  VARCHAR(200) NOT NULL
+  description   TEXT
+  state         VARCHAR(100)
+  latitude      FLOAT
+  longitude     FLOAT
+  created_at    TIMESTAMP DEFAULT NOW()
+
+solar_predictions (FK → users)
+  id                   SERIAL PK
+  user_id              INTEGER FK → users.id
+  city_name            VARCHAR(100)
+  latitude / longitude FLOAT
+  solar_irradiance_kwh FLOAT      -- annual kWh/m²
+  clearness_index      FLOAT      -- 0–1
+  temp_mean_c          FLOAT
+  predicted_output_kwh FLOAT
+  capacity_factor      FLOAT
+  confidence_score     FLOAT
+  created_at           TIMESTAMP
+
+wind_predictions (FK → users)
+  id                    SERIAL PK
+  user_id               INTEGER FK → users.id
+  city_name             VARCHAR(100)
+  latitude / longitude  FLOAT
+  wind_speed_10m_ms     FLOAT  -- NASA POWER at 10m
+  wind_speed_50m_ms     FLOAT  -- GWA at 50m
+  wind_speed_100m_ms    FLOAT  -- GWA at 100m
+  wind_power_density    FLOAT  -- W/m²
+  predicted_output_kwh  FLOAT
+  capacity_factor       FLOAT
+  wind_class            INTEGER  -- 1–4
+  confidence_score      FLOAT
+  created_at            TIMESTAMP
+
+site_analyses (FK → users)
+  id                    SERIAL PK
+  user_id               INTEGER FK → users.id
+  site_name             VARCHAR(200)
+  latitude / longitude  FLOAT
+  -- Resource inputs
+  solar_irradiance_kwh  FLOAT
+  wind_speed_50m_ms     FLOAT
+  elevation_m / slope_deg FLOAT
+  ndvi / ndwi           FLOAT
+  dist_grid_km / dist_road_km FLOAT
+  -- Sub-scores (0–100)
+  solar_score           FLOAT  -- 30% weight
+  wind_score            FLOAT  -- 25% weight
+  terrain_score         FLOAT  -- 20% weight
+  land_use_score        FLOAT  -- 15% weight
+  infrastructure_score  FLOAT  -- 10% weight
+  suitability_score     FLOAT  -- composite
+  recommendation        VARCHAR(50)
+  created_at            TIMESTAMP
+
+reports (FK → users)
+  id            SERIAL PK
+  user_id       INTEGER FK → users.id
+  created_at    TIMESTAMP
 ```
+
+All tables use **CASCADE DELETE** on the user foreign key — deleting a user removes all their data.
+
+---
+
+## 🧪 Running Tests
+
+The project uses **pytest**. All tests live in `backend/tests/`.
+
+```powershell
+# Navigate to backend and activate venv
+cd backend
+.\venv\Scripts\Activate.ps1
+
+# Run all tests
+.\venv\Scripts\python.exe -m pytest tests/ -v
+
+# Run only the wind/solar/deployment tests
+.\venv\Scripts\python.exe -m pytest tests/test_wind_solar_deployment.py -v
+
+# Run with coverage (if pytest-cov is installed)
+.\venv\Scripts\python.exe -m pytest tests/ --cov=app --cov-report=term-missing
+```
+
+**Current test suite:** `140 tests · 0 failures`
+
+| Test File | What it Tests |
+|---|---|
+| `test_coordinates.py` | Coordinate validation (lat/lon bounds) |
+| `test_solar_features.py` | NASA POWER API client (mocked HTTP) |
+| `test_wind_solar_deployment.py` | Wind classification, solar classification, all 16 deployment rule combos, capacity factor, confidence score, boundary values, invalid inputs |
+
+---
+
+## 👥 User Roles & Access Control
+
+Every registered user is assigned a **role** that controls what they can access.
+
+| Role | Created By | Access Level |
+|---|---|---|
+| `user` | Self-registration | Create/view their own projects |
+| `analyst` | Admin promotion | Run predictions + all `user` access |
+| `admin` | Admin promotion | All endpoints including user management |
+
+**Promote a user to analyst (admin required):**
+```http
+PUT /api/v1/auth/users/{user_id}/role?role=analyst
+Authorization: Bearer <admin_token>
+```
+
+JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MINUTES`).
+
+---
+
+## 🗂️ Data Sources
+
+| Dataset | Status | How Used |
+|---|---|---|
+| **NASA POWER REST API** | ✅ Live | Fetches solar irradiance, temperature, humidity for any lat/lon |
+| **Global Wind Atlas** | 🔄 Stub | Will provide wind speed at 10m / 50m / 100m |
+| **NASA SRTM** | 🔄 Stub | Will provide elevation and slope data |
+| **OpenStreetMap** | 🔄 Stub | Will provide road and grid proximity data |
+| **Copernicus Sentinel-2** | 🔄 Stub | Will provide NDVI / NDWI / land cover |
+
+**NASA POWER API** is the only live external call right now. No API key is required — it is a free, publicly accessible API from NASA Langley Research Center.
 
 ---
 
 ## 🗓️ Milestone Roadmap
 
-### Milestone 1 — Weeks 1 & 2 · Project Initialization & Core Setup
+### ✅ Milestone 1 — Foundation (Weeks 1–2)
 
-| Task | Status |
-|---|---|
-| Define project objectives and renewable energy workflows | ✅ |
-| Design system architecture and database schema | ✅ |
-| Create UI wireframes and workflow planning | ✅ |
-| Setup frontend and backend environments | ✅ |
-| Implement authentication and RBAC | ✅ |
-| Build project and site management workflows | ✅ |
-| Integrate GIS and environmental datasets | 🔄 |
+- [x] System architecture & database design
+- [x] FastAPI backend with JWT authentication
+- [x] PostgreSQL database + SQLAlchemy ORM
+- [x] User registration, login, role-based access control
+- [x] Project CRUD API (create / read / update / delete)
+- [x] NASA POWER API integration (solar irradiance fetching)
+- [x] React frontend: Login, Register, Dashboard, Projects pages
+- [x] Axios API client with JWT interceptors and auto-logout
+- [x] **Wind Assessment Service** (classification + capacity factor)
+- [x] **Solar Assessment Service** (classification + capacity factor)
+- [x] **Deployment Strategy Service** (16-rule recommendation engine)
+- [x] 140 unit tests covering all assessment logic
 
-**Outcomes:** Working authentication · Site management system · Environmental datasets integrated
+### ⬜ Milestone 2 — ML Prediction Engines (Weeks 3–4)
 
----
+- [ ] Connect real ML models for solar energy yield prediction
+- [ ] Connect real ML models for wind energy yield prediction
+- [ ] Integrate Global Wind Atlas live data
+- [ ] Populate prediction history endpoints
+- [ ] SRTM elevation + OSM proximity integration
 
-### Milestone 2 — Weeks 3 & 4 · Environmental Intelligence & Resource Prediction
+### ⬜ Milestone 3 — Site Intelligence & Optimisation (Weeks 5–6)
 
-| Task | Status |
-|---|---|
-| Implement environmental data engine | ⬜ |
-| Build GIS processing workflows | ⬜ |
-| Develop solar potential prediction models | ⬜ |
-| Implement wind resource estimation | ⬜ |
-| Generate resource assessment reports | ⬜ |
+- [ ] Full site suitability scoring with real GIS data
+- [ ] Deployment optimisation engine
+- [ ] Energy forecasting (daily / monthly / annual)
+- [ ] Interactive GIS maps (Leaflet / Mapbox)
 
-**Outcomes:** Environmental intelligence engine · Solar & wind prediction workflows · Resource assessment
+### ⬜ Milestone 4 — Analytics, Reports & Deployment (Weeks 7–8)
 
----
-
-### Milestone 3 — Weeks 5 & 6 · Site Intelligence & Optimization
-
-| Task | Status |
-|---|---|
-| Implement site suitability engine | ⬜ |
-| Build deployment optimization workflows | ⬜ |
-| Develop forecasting models | ⬜ |
-| Generate investment recommendations | ⬜ |
-| Create renewable energy dashboards | ⬜ |
-
-**Outcomes:** Site intelligence engine · Deployment optimization · Recommendation workflows
+- [ ] PDF / Excel report generation (ReportLab + openpyxl)
+- [ ] Role-specific dashboards with charts (Plotly / Chart.js)
+- [ ] End-to-end integration testing
+- [ ] Docker production build
+- [ ] Cloud deployment (AWS / Azure)
 
 ---
 
-### Milestone 4 — Weeks 7 & 8 · Analytics, Testing & Deployment
+## 🔧 Troubleshooting
 
-| Task | Status |
-|---|---|
-| Build executive dashboards (all 4 roles) | ⬜ |
-| Add reports and GIS visualization modules | ⬜ |
-| Implement testing and validations | ⬜ |
-| Deploy platform on Docker + AWS/Azure | ⬜ |
-| Prepare final documentation and presentation | ⬜ |
+### `npm run dev` fails with "Cannot find package.json"
 
-**Outcomes:** Fully deployed production-ready platform · Complete end-to-end workflow demonstrable
+You must be **inside the `frontend/` directory**:
+```powershell
+cd frontend
+npm run dev
+```
 
----
+### `uvicorn` fails to start / database errors
 
-## 📊 Evaluation Criteria
+1. Check your `.env` values — especially `POSTGRES_PORT` and `POSTGRES_PASSWORD`
+2. Verify PostgreSQL is running: `pg_isready -h localhost -p 5433`
+3. Check the db-health endpoint: `http://localhost:8000/db-health`
 
-| Milestone | Deliverables |
-|---|---|
-| **Week 2** | Project initialized · Authentication live · Site management operational · Datasets integrated |
-| **Week 4** | Solar prediction engine · Wind prediction engine · GIS analytics implemented |
-| **Week 6** | Site suitability engine · Forecasting models · Optimization recommendations |
-| **Week 8** | Full frontend + backend deployed · Dashboards & reporting live · End-to-end workflow demonstrated |
+### `psycopg2` installation fails on Windows
 
----
+Install the pre-built binary instead:
+```powershell
+pip install psycopg2-binary
+```
 
-## 📏 Performance Metrics
+### Tables don't exist / `relation "users" does not exist`
 
-### Solar Prediction
-- Solar irradiance prediction accuracy (RMSE, MAE)
-- Energy generation estimation accuracy
-- Capacity factor prediction error (%)
+FastAPI auto-creates all tables on startup via `Base.metadata.create_all()`. If it fails:
+1. Make sure the database exists in PostgreSQL
+2. Check the startup logs for any connection errors
+3. Try running Alembic migrations manually:
+   ```powershell
+   alembic upgrade head
+   ```
 
-### Wind Prediction
-- Wind speed prediction accuracy (RMSE)
-- Wind power estimation accuracy (kWh)
-- Seasonal forecast accuracy
+### Frontend shows "Network Error" when calling the API
 
-### Site Selection
-- Suitability classification accuracy (F1-score)
-- Recommendation precision (top-5 sites)
-- Infrastructure assessment accuracy
+- Backend must be running on port `8000`
+- CORS is configured to allow `localhost:5173` — do not change the frontend dev port
 
-### Forecasting
-- Annual energy prediction accuracy (MAPE < 10%)
-- Revenue estimation accuracy
-- Investment recommendation effectiveness
+### JWT token expired / auto-redirected to login
 
-### System Performance
-- GIS processing latency (< 2s per query)
-- API response time (< 500ms p95)
-- Dashboard loading speed (< 3s)
-- Concurrent geospatial analysis capacity
-
----
-
-## 📅 Internship Progress
-
-| Day | Date | Topic |
-|---|---|---|
-| Day 1 | 30 June 2026 | Renewable Energy Fundamentals – Solar & Wind basics |
-| Day 2 | 1 July 2026 | Project Structure Setup & Dataset Analysis (EDA) |
-| Day 3 | 2 July 2026 | System Architecture Design & API Planning |
-| Day 4 | 3 July 2026 | Database Design & Schema Definition |
-| Day 5 | 4 July 2026 | Backend Foundation – FastAPI, Models, Auth |
-| Day 6 | 7 July 2026 | *(upcoming)* |
+Tokens expire after 30 minutes. Simply log in again. To increase the lifetime, change `ACCESS_TOKEN_EXPIRE_MINUTES` in `.env`.
 
 ---
 
