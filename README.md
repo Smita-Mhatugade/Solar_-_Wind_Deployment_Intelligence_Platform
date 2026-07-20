@@ -191,9 +191,9 @@ solar-wind-deployment-intelligence/
 │   │   │   └── report.py
 │   │   │
 │   │   ├── services/                     # Business logic (no DB, no HTTP)
-│   │   │   ├── solar_assessment.py       # ✅ Solar classification & capacity factor
-│   │   │   ├── wind_assessment.py        # ✅ Wind classification & capacity factor
-│   │   │   ├── deployment_strategy.py    # ✅ Solar/Wind/Hybrid recommendation
+│   │   │   ├── solar_assessment.py       #  Solar classification & capacity factor
+│   │   │   ├── wind_assessment.py        #  Wind classification & capacity factor
+│   │   │   ├── deployment_strategy.py    #  Solar/Wind/Hybrid recommendation
 │   │   │   ├── feature_builder.py        # Orchestrates data source clients
 │   │   │   └── spatial/
 │   │   │       ├── analysis_coordinator.py  # Suitability scoring coordinator
@@ -210,7 +210,7 @@ solar-wind-deployment-intelligence/
 │   ├── tests/
 │   │   ├── test_coordinates.py           # Coordinate validation tests
 │   │   ├── test_solar_features.py        # NASA POWER client tests
-│   │   └── test_wind_solar_deployment.py # ✅ 140 tests for all new services
+│   │   └── test_wind_solar_deployment.py #  140 tests for all new services
 │   ├── .env                              # Local environment variables
 │   ├── requirements.txt                  # Python dependencies
 │   └── Dockerfile                        # Backend container definition
@@ -420,7 +420,7 @@ All variables live in `backend/.env`. Here is the complete reference:
 
 All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localhost:8000/docs` to try them interactively.
 
-### 🔐 Authentication — `/auth`
+###  Authentication — `/auth`
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
@@ -448,11 +448,11 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
-| `GET` | `/projects` | ✅ Any role | List all my projects |
-| `POST` | `/projects` | ✅ Any role | Create a new project |
-| `GET` | `/projects/{id}` | ✅ Owner or Admin | Get project by ID |
-| `PUT` | `/projects/{id}` | ✅ Owner or Admin | Update a project |
-| `DELETE` | `/projects/{id}` | ✅ Owner or Admin | Delete a project |
+| `GET` | `/projects` |  Any role | List all my projects |
+| `POST` | `/projects` |  Any role | Create a new project |
+| `GET` | `/projects/{id}` |  Owner or Admin | Get project by ID |
+| `PUT` | `/projects/{id}` | Owner or Admin | Update a project |
+| `DELETE` | `/projects/{id}` |  Owner or Admin | Delete a project |
 
 **Create project request body:**
 ```json
@@ -486,7 +486,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-### 💨 Wind — `/wind`
+###  Wind — `/wind`
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
@@ -495,7 +495,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-### 📍 Site Analysis — `/site`
+### Site Analysis — `/site`
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
@@ -536,7 +536,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
-| `POST` | `/reports/generate` | 🔒 Analyst/Admin | Generate PDF/Excel report *(Milestone 2)* |
+| `POST` | `/reports/generate` | Analyst/Admin | Generate PDF/Excel report *(Milestone 2)* |
 
 ---
 
@@ -687,55 +687,13 @@ JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MI
 
 | Dataset | Status | How Used |
 |---|---|---|
-| **NASA POWER REST API** | ✅ Live | Fetches solar irradiance, temperature, humidity for any lat/lon |
-| **Global Wind Atlas** | 🔄 Stub | Will provide wind speed at 10m / 50m / 100m |
-| **NASA SRTM** | 🔄 Stub | Will provide elevation and slope data |
-| **OpenStreetMap** | 🔄 Stub | Will provide road and grid proximity data |
-| **Copernicus Sentinel-2** | 🔄 Stub | Will provide NDVI / NDWI / land cover |
+| **NASA POWER REST API** | Live | Fetches solar irradiance, temperature, humidity for any lat/lon |
+| **Global Wind Atlas** |  Stub | Will provide wind speed at 10m / 50m / 100m |
+| **NASA SRTM** |  Stub | Will provide elevation and slope data |
+| **OpenStreetMap** | Stub | Will provide road and grid proximity data |
+| **Copernicus Sentinel-2** | Stub | Will provide NDVI / NDWI / land cover |
 
 **NASA POWER API** is the only live external call right now. No API key is required — it is a free, publicly accessible API from NASA Langley Research Center.
-
----
-
-##  Milestone Roadmap
-
-### Milestone 1 — Foundation (Weeks 1–2)
-
-- [x] System architecture & database design
-- [x] FastAPI backend with JWT authentication
-- [x] PostgreSQL database + SQLAlchemy ORM
-- [x] User registration, login, role-based access control
-- [x] Project CRUD API (create / read / update / delete)
-- [x] NASA POWER API integration (solar irradiance fetching)
-- [x] React frontend: Login, Register, Dashboard, Projects pages
-- [x] Axios API client with JWT interceptors and auto-logout
-- [x] **Wind Assessment Service** (classification + capacity factor)
-- [x] **Solar Assessment Service** (classification + capacity factor)
-- [x] **Deployment Strategy Service** (16-rule recommendation engine)
-- [x] 140 unit tests covering all assessment logic
-
-### Milestone 2 — ML Prediction Engines (Weeks 3–4)
-
-- [ ] Connect real ML models for solar energy yield prediction
-- [ ] Connect real ML models for wind energy yield prediction
-- [ ] Integrate Global Wind Atlas live data
-- [ ] Populate prediction history endpoints
-- [ ] SRTM elevation + OSM proximity integration
-
-### Milestone 3 — Site Intelligence & Optimisation (Weeks 5–6)
-
-- [ ] Full site suitability scoring with real GIS data
-- [ ] Deployment optimisation engine
-- [ ] Energy forecasting (daily / monthly / annual)
-- [ ] Interactive GIS maps (Leaflet / Mapbox)
-
-###  Milestone 4 — Analytics, Reports & Deployment (Weeks 7–8)
-
-- [ ] PDF / Excel report generation (ReportLab + openpyxl)
-- [ ] Role-specific dashboards with charts (Plotly / Chart.js)
-- [ ] End-to-end integration testing
-- [ ] Docker production build
-- [ ] Cloud deployment (AWS / Azure)
 
 ---
 
