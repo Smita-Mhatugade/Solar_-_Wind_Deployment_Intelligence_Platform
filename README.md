@@ -1,6 +1,6 @@
 <div align="center">
 
-# ☀️💨 Solar & Wind Deployment Intelligence Platform
+#  Solar & Wind Deployment Intelligence Platform
 
 **An AI-powered platform for identifying, evaluating, and optimizing renewable energy deployment sites**
 
@@ -12,7 +12,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge)](LICENSE)
 
-> 🎓 **Infosys Springboard Virtual Internship** — Smita Mhatugade
+>  **Infosys Springboard Virtual Internship** — Smita Mhatugade
 
 *Empowering renewable energy companies, government agencies, and sustainability consultants with AI-driven geospatial intelligence.*
 
@@ -20,7 +20,7 @@
 
 ---
 
-## 📖 Table of Contents
+##  Table of Contents
 
 - [What This Project Does](#-what-this-project-does)
 - [System Architecture](#-system-architecture)
@@ -56,7 +56,7 @@ The Solar & Wind Deployment Intelligence Platform helps analysts and energy plan
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -122,7 +122,7 @@ The Solar & Wind Deployment Intelligence Platform helps analysts and energy plan
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technology | Version | Purpose |
 |---|---|---|---|
@@ -145,7 +145,7 @@ The Solar & Wind Deployment Intelligence Platform helps analysts and energy plan
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 solar-wind-deployment-intelligence/
@@ -253,7 +253,7 @@ solar-wind-deployment-intelligence/
 
 ---
 
-## ✅ Prerequisites
+##  Prerequisites
 
 Before you begin, make sure you have the following installed:
 
@@ -270,7 +270,7 @@ Before you begin, make sure you have the following installed:
 
 ---
 
-## 🚀 Quick Start (Running Locally)
+##  Quick Start (Running Locally)
 
 ### Step 1 – Clone the Repository
 
@@ -343,7 +343,7 @@ JWT_SECRET_KEY=your-jwt-secret-key-change-in-production
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-> ⚠️ **Never commit your real `.env` file to version control.**
+>  **Never commit your real `.env` file to version control.**
 
 #### Start the Backend Server
 
@@ -411,7 +411,7 @@ Also verify the backend:
 
 ---
 
-## 🔐 Environment Variables Reference
+##  Environment Variables Reference
 
 All variables live in `backend/.env`. Here is the complete reference:
 
@@ -444,11 +444,11 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
-| `POST` | `/auth/register` | ❌ Public | Register a new user account |
-| `POST` | `/auth/login` | ❌ Public | Login; returns JWT access token |
-| `GET` | `/auth/me` | ✅ Any role | Get current user profile |
-| `GET` | `/auth/users` | 🔒 Admin only | List all registered users |
-| `PUT` | `/auth/users/{id}/role` | 🔒 Admin only | Change a user's role |
+| `POST` | `/auth/register` |  Public | Register a new user account |
+| `POST` | `/auth/login` |  Public | Login; returns JWT access token |
+| `GET` | `/auth/me` |  Any role | Get current user profile |
+| `GET` | `/auth/users` | Admin only | List all registered users |
+| `PUT` | `/auth/users/{id}/role` | Admin only | Change a user's role |
 
 **Login response example:**
 ```json
@@ -464,7 +464,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-### 📂 Projects — `/projects`
+###  Projects — `/projects`
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
@@ -487,13 +487,13 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-### ☀️ Solar — `/solar`
+###Solar — `/solar`
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
-| `GET` | `/solar/features?latitude=&longitude=` | ❌ Public | Fetch live solar irradiance from NASA POWER API |
-| `POST` | `/solar/predict` | 🔒 Analyst/Admin | Solar energy yield prediction *(Milestone 2)* |
-| `GET` | `/solar/history` | ✅ Any role | User's solar prediction history *(Milestone 2)* |
+| `GET` | `/solar/features?latitude=&longitude=` |  Public | Fetch live solar irradiance from NASA POWER API |
+| `POST` | `/solar/predict` |  Analyst/Admin | Solar energy yield prediction *(Milestone 2)* |
+| `GET` | `/solar/history` |  Any role | User's solar prediction history *(Milestone 2)* |
 
 **Solar features response example:**
 ```json
@@ -510,8 +510,8 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
-| `POST` | `/wind/predict` | 🔒 Analyst/Admin | Wind energy yield prediction *(Milestone 2)* |
-| `GET` | `/wind/history` | ✅ Any role | User's wind prediction history *(Milestone 2)* |
+| `POST` | `/wind/predict` |  Analyst/Admin | Wind energy yield prediction *(Milestone 2)* |
+| `GET` | `/wind/history` | Any role | User's wind prediction history *(Milestone 2)* |
 
 ---
 
@@ -519,8 +519,8 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
-| `POST` | `/site/analyze` | ❌ Public (temp) | Run spatial suitability analysis for lat/lon |
-| `GET` | `/site/history` | ✅ Any role | Site analysis history *(Milestone 2)* |
+| `POST` | `/site/analyze` |  Public (temp) | Run spatial suitability analysis for lat/lon |
+| `GET` | `/site/history` |  Any role | Site analysis history *(Milestone 2)* |
 
 **Site analyze request body:**
 ```json
@@ -552,7 +552,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-### 📊 Reports — `/reports`
+###  Reports — `/reports`
 
 | Method | Endpoint | Auth Required | Description |
 |---|---|---|---|
@@ -560,7 +560,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-### ❤️ Health Checks
+###  Health Checks
 
 | URL | Description |
 |---|---|
@@ -572,7 +572,7 @@ All endpoints are prefixed with `/api/v1/`. Use the Swagger UI at `http://localh
 
 ---
 
-## 🗃️ Database Schema
+##  Database Schema
 
 ```
 users
@@ -654,7 +654,7 @@ All tables use **CASCADE DELETE** on the user foreign key — deleting a user re
 
 ---
 
-## 🧪 Running Tests
+##  Running Tests
 
 The project uses **pytest**. All tests live in `backend/tests/`.
 
@@ -683,7 +683,7 @@ cd backend
 
 ---
 
-## 👥 User Roles & Access Control
+##  User Roles & Access Control
 
 Every registered user is assigned a **role** that controls what they can access.
 
@@ -703,7 +703,7 @@ JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MI
 
 ---
 
-## 🗂️ Data Sources
+##  Data Sources
 
 | Dataset | Status | How Used |
 |---|---|---|
@@ -717,9 +717,9 @@ JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MI
 
 ---
 
-## 🗓️ Milestone Roadmap
+##  Milestone Roadmap
 
-### ✅ Milestone 1 — Foundation (Weeks 1–2)
+### Milestone 1 — Foundation (Weeks 1–2)
 
 - [x] System architecture & database design
 - [x] FastAPI backend with JWT authentication
@@ -734,7 +734,7 @@ JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MI
 - [x] **Deployment Strategy Service** (16-rule recommendation engine)
 - [x] 140 unit tests covering all assessment logic
 
-### ⬜ Milestone 2 — ML Prediction Engines (Weeks 3–4)
+### Milestone 2 — ML Prediction Engines (Weeks 3–4)
 
 - [ ] Connect real ML models for solar energy yield prediction
 - [ ] Connect real ML models for wind energy yield prediction
@@ -742,14 +742,14 @@ JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MI
 - [ ] Populate prediction history endpoints
 - [ ] SRTM elevation + OSM proximity integration
 
-### ⬜ Milestone 3 — Site Intelligence & Optimisation (Weeks 5–6)
+### Milestone 3 — Site Intelligence & Optimisation (Weeks 5–6)
 
 - [ ] Full site suitability scoring with real GIS data
 - [ ] Deployment optimisation engine
 - [ ] Energy forecasting (daily / monthly / annual)
 - [ ] Interactive GIS maps (Leaflet / Mapbox)
 
-### ⬜ Milestone 4 — Analytics, Reports & Deployment (Weeks 7–8)
+###  Milestone 4 — Analytics, Reports & Deployment (Weeks 7–8)
 
 - [ ] PDF / Excel report generation (ReportLab + openpyxl)
 - [ ] Role-specific dashboards with charts (Plotly / Chart.js)
@@ -759,7 +759,7 @@ JWT tokens expire after **30 minutes** (configurable via `ACCESS_TOKEN_EXPIRE_MI
 
 ---
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### `npm run dev` fails with "Cannot find package.json"
 
@@ -803,7 +803,7 @@ Tokens expire after 30 minutes. Simply log in again. To increase the lifetime, c
 
 ---
 
-## 👩‍💻 About
+##  About
 
 | | |
 |---|---|
@@ -817,6 +817,6 @@ Tokens expire after 30 minutes. Simply log in again. To increase the lifetime, c
 
 <div align="center">
 
-Made with ❤️ for a greener, smarter energy future 🌱⚡
+Made with for a greener, smarter energy future 
 
 </div>
