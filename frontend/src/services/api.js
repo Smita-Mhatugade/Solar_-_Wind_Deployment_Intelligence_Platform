@@ -3,7 +3,6 @@
  */
 import axios from 'axios';
 
-// Create an Axios instance pointing to the FastAPI backend
 const api = axios.create({
   baseURL: 'http://localhost:8000/api/v1',
   headers: {
@@ -11,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// ── Request interceptor: attach JWT token ──────────────────────────────────────
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -23,12 +21,10 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ── Response interceptor: auto-logout on 401 ──────────────────────────────────
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid — clear storage and redirect
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       if (window.location.pathname !== '/login') {
@@ -41,7 +37,6 @@ api.interceptors.response.use(
 
 export default api;
 
-// ── Auth Service Functions ─────────────────────────────────────────────────────
 export const authService = {
   async login(email, password) {
     const params = new URLSearchParams();
@@ -77,7 +72,6 @@ export const authService = {
   },
 };
 
-// ── Project Service Functions ──────────────────────────────────────────────────
 export const projectService = {
   async getAll() {
     const { data } = await api.get('/projects');

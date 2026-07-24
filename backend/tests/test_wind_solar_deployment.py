@@ -19,7 +19,6 @@ Run with:
     cd backend
     python -m pytest tests/test_wind_solar_deployment.py -v
 
-Day 7 – Infosys Virtual Internship | 20 July 2026
 """
 
 import pytest

@@ -2,27 +2,7 @@
 app/services/wind_assessment.py – Wind Resource Assessment Service.
 
 Provides reusable, rule-based engineering functions for wind resource
-evaluation. These functions are deliberately free of ML dependencies so they
-can be used as pre-filters, feature enrichers, and post-processors throughout
-the platform.
-
-Classification thresholds are based on industry-standard references:
-  - IEC 61400 Wind Turbine Standard (wind class boundaries)
-  - NREL Wind Resource Classification guidelines
-  - IEA Wind Technology Collaboration Programme benchmarks
-
-Capacity factor methodology follows the simplified power-law approximation
-used in preliminary wind farm feasibility studies (before full Weibull
-distribution fitting is applied to long-term time-series data).
-
-Compatible with future modules:
-  - Raster Analysis    → pass raster-sampled wind_speed values directly
-  - NASA POWER         → pass ``wind_speed_10m_ms`` from NasaPowerClient
-  - Global Wind Atlas  → pass ``wind_speed_50m_ms`` / ``wind_speed_100m_ms``
-  - Spatial Suitability → use wind_class / capacity_factor as scoring inputs
-  - DeploymentStrategy → consumed by recommend_deployment()
-
-Day 7 – Infosys Virtual Internship | 20 July 2026
+evaluation.
 """
 
 from __future__ import annotations
@@ -32,11 +12,9 @@ from typing import Literal
 
 logger = logging.getLogger(__name__)
 
-# ── Type Aliases ──────────────────────────────────────────────────────────────
 WindClassification = Literal["Poor", "Moderate", "Good", "Excellent"]
 
 
-# ── Classification Thresholds ─────────────────────────────────────────────────
 # These constants are the single source of truth for thresholds. Changing them
 # here automatically updates all downstream logic.
 _POOR_MAX: float = 3.0        # m/s  – below this → Poor
@@ -45,18 +23,8 @@ _GOOD_MAX: float = 7.0        # m/s  – [5, 7)    → Good
 # ≥ 7.0 m/s                            → Excellent
 
 
-# ── Capacity Factor Lookup ────────────────────────────────────────────────────
 # Engineering-based rule table derived from typical onshore turbine performance
 # curves (Vestas V90, Siemens SWT-2.3, GE 1.85-82.5).
-#
-# Assumptions:
-#   1. Modern onshore turbine with 100 m hub height and IEC Class II design.
-#   2. Cut-in wind speed: 3 m/s;  Rated wind speed: ~13 m/s;  Cut-out: 25 m/s.
-#   3. Availability factor of 97 % is already baked into the upper-bound values.
-#   4. Values represent the ANNUAL average capacity factor (not instantaneous).
-#   5. Wind speed is the mean annual wind speed at hub height (m/s).
-#   6. Losses (wake, electrical, blade degradation) are conservatively set at 10 %.
-#
 # Each entry: (min_speed_inclusive, max_speed_exclusive, capacity_factor_pct)
 _CF_TABLE: list[tuple[float, float, float]] = [
     (0.0,  3.0,   5.0),   # Below cut-in – very minimal or no generation
@@ -70,7 +38,6 @@ _CF_TABLE: list[tuple[float, float, float]] = [
 ]
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
 
 def calculate_wind_class(wind_speed: float) -> int:
     """
@@ -259,7 +226,6 @@ def get_wind_assessment_summary(wind_speed: float) -> dict:
     }
 
 
-# ── Internal Helpers ──────────────────────────────────────────────────────────
 
 def _validate_wind_speed(wind_speed: float) -> None:
     """

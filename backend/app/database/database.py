@@ -13,7 +13,6 @@ Key SQL Concepts Demonstrated Here:
   - Dependency Injection: get_db() is used as a FastAPI Depends() parameter
     so each route handler gets its own session that auto-closes.
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from sqlalchemy import create_engine, text
@@ -23,7 +22,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# ── SQLAlchemy Engine ─────────────────────────────────────────────────────────
 # create_engine connects to PostgreSQL using the DATABASE_URL from .env
 # pool_pre_ping=True → tests connections before using them (handles DB restarts)
 engine = create_engine(
@@ -34,7 +32,6 @@ engine = create_engine(
     echo=settings.DEBUG,  # print SQL statements to console in DEBUG mode
 )
 
-# ── Session Factory ───────────────────────────────────────────────────────────
 # SessionLocal is the factory — calling SessionLocal() creates a new session.
 SessionLocal = sessionmaker(
     autocommit=False,   # we commit manually — prevents accidental writes
@@ -43,7 +40,6 @@ SessionLocal = sessionmaker(
 )
 
 
-# ── Declarative Base ──────────────────────────────────────────────────────────
 # All ORM models (in models/) inherit from Base.
 # SQLAlchemy uses Base.metadata to track all table definitions.
 class Base(DeclarativeBase):
@@ -54,7 +50,6 @@ class Base(DeclarativeBase):
     pass
 
 
-# ── Dependency Injection for FastAPI ─────────────────────────────────────────
 def get_db():
     """
     FastAPI dependency that provides a database session per request.

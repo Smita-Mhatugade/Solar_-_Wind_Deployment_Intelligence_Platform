@@ -10,7 +10,6 @@ Endpoints:
   PUT    /projects/{id}    → Update a project (owner or admin)
   DELETE /projects/{id}    → Delete a project (owner or admin)
 
-Day 6 – Infosys Virtual Internship | 10 July 2026
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -27,7 +26,6 @@ from app.models.user import User
 router = APIRouter()
 
 
-# ── GET /projects ──────────────────────────────────────────────────────────────
 @router.get(
     "",
     response_model=List[ProjectResponse],
@@ -44,7 +42,6 @@ def get_projects(
     return projects
 
 
-# ── POST /projects ─────────────────────────────────────────────────────────────
 @router.post(
     "",
     response_model=ProjectResponse,
@@ -77,7 +74,6 @@ def create_project(
     return new_project
 
 
-# ── GET /projects/{id} ─────────────────────────────────────────────────────────
 @router.get(
     "/{project_id}",
     response_model=ProjectResponse,
@@ -104,7 +100,6 @@ def get_project(
     return project
 
 
-# ── PUT /projects/{id} ─────────────────────────────────────────────────────────
 @router.put(
     "/{project_id}",
     response_model=ProjectResponse,
@@ -139,7 +134,6 @@ def update_project(
     return project
 
 
-# ── DELETE /projects/{id} ──────────────────────────────────────────────────────
 @router.delete(
     "/{project_id}",
     status_code=status.HTTP_204_NO_CONTENT,

@@ -6,7 +6,6 @@ Schemas define what data the API accepts (request body) and returns
   - Models  → what the DATABASE looks like
   - Schemas → what the API contract looks like
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from app.schemas.user import UserCreate, UserLogin, UserResponse, UserBase

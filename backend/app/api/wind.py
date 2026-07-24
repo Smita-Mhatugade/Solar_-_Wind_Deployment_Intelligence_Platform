@@ -4,7 +4,6 @@ app/api/wind.py – Wind Prediction endpoints.
 All endpoints require authentication (JWT Bearer token).
 Analyst and Admin roles can run predictions.
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from fastapi import APIRouter, Depends, HTTPException

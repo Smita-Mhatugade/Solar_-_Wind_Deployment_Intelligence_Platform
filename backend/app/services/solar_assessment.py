@@ -2,27 +2,7 @@
 app/services/solar_assessment.py – Solar Resource Assessment Service.
 
 Provides reusable, rule-based engineering functions for solar resource
-evaluation. These functions are parallel to ``wind_assessment.py`` and follow
-the same structural conventions so that both services can be consumed
-symmetrically by the ``DeploymentStrategy`` service.
-
-Classification thresholds are based on:
-  - IEC 61215 / IEC 61646 PV performance standards
-  - NREL Solar Resource Classification guidelines
-  - World Bank / ESMAP Solar Atlas benchmarks
-
-Irradiance units:
-  - ``solar_irradiance_kwh``: Annual Global Horizontal Irradiance (GHI)
-    in kWh/m²/day, as returned by the NASA POWER API
-    (parameter: ALLSKY_SFC_SW_DWN, annual average).
-
-Compatible with future modules:
-  - NASA POWER integration → pass ``solar_irradiance`` from NasaPowerClient
-  - Raster Analysis        → pass raster-sampled GHI values directly
-  - Spatial Suitability    → use solar_class / capacity_factor as scoring inputs
-  - DeploymentStrategy     → consumed by recommend_deployment()
-
-Day 7 – Infosys Virtual Internship | 20 July 2026
+evaluation.
 """
 
 from __future__ import annotations
@@ -32,11 +12,9 @@ from typing import Literal
 
 logger = logging.getLogger(__name__)
 
-# ── Type Aliases ──────────────────────────────────────────────────────────────
 SolarClassification = Literal["Poor", "Moderate", "Good", "Excellent"]
 
 
-# ── Classification Thresholds (kWh/m²/day) ───────────────────────────────────
 # Based on ESMAP/World Bank global solar resource classifications
 _POOR_MAX: float = 3.5        # kWh/m²/day – below this → Poor
 _MODERATE_MAX: float = 4.5    # kWh/m²/day – [3.5, 4.5) → Moderate
@@ -44,17 +22,7 @@ _GOOD_MAX: float = 5.5        # kWh/m²/day – [4.5, 5.5) → Good
 # ≥ 5.5 kWh/m²/day                          → Excellent
 
 
-# ── Capacity Factor Lookup (Solar PV) ────────────────────────────────────────
 # Engineering-based rule table for fixed-tilt crystalline silicon PV systems.
-#
-# Assumptions:
-#   1. Fixed-tilt monocrystalline silicon panels at optimal tilt angle.
-#   2. System efficiency: 80 % (accounts for inverter, wiring, soiling losses).
-#   3. Panel efficiency: 20 % (standard commercial modules).
-#   4. Performance ratio: ~80 % (industry standard for utility-scale PV).
-#   5. Input irradiance is mean annual GHI in kWh/m²/day.
-#   6. Capacity factor = Annual generation / (Rated capacity × 8760 hours).
-#
 # Each entry: (min_irradiance_inclusive, max_irradiance_exclusive, capacity_factor_pct)
 _CF_TABLE: list[tuple[float, float, float]] = [
     (0.0,  2.0,   5.0),   # Very low irradiance – marginal generation
@@ -67,7 +35,6 @@ _CF_TABLE: list[tuple[float, float, float]] = [
 ]
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
 
 def calculate_solar_class(solar_irradiance: float) -> int:
     """
@@ -249,7 +216,6 @@ def get_solar_assessment_summary(solar_irradiance: float) -> dict:
     }
 
 
-# ── Internal Helpers ──────────────────────────────────────────────────────────
 
 def _validate_solar_irradiance(solar_irradiance: float) -> None:
     """

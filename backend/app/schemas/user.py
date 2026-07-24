@@ -1,7 +1,6 @@
 """
 app/schemas/user.py – Pydantic schemas for User data validation.
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from pydantic import BaseModel, EmailStr, ConfigDict
