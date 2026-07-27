@@ -7,6 +7,7 @@ from app.api.reports import router as reports_router
 from app.api.projects import router as projects_router
 from app.api.home import router as home_router
 from app.api.predictions import router as predictions_router
+from app.api.analysis import router as analysis_router
 
 __all__ = [
     "auth_router",
@@ -18,4 +19,5 @@ __all__ = [
     "projects_router",
     "home_router",
     "predictions_router",
+    "analysis_router",
 ]

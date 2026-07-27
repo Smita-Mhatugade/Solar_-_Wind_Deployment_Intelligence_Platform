@@ -26,6 +26,7 @@ from app.api import (
     reports_router,
     projects_router,
     predictions_router,
+    analysis_router,
 )
 
 # Set up logging
@@ -81,6 +82,7 @@ app.include_router(sites_router, prefix=f"{api_prefix}/sites", tags=["Sites"])
 app.include_router(reports_router, prefix=f"{api_prefix}/reports", tags=["Report Generation"])
 app.include_router(projects_router, prefix=f"{api_prefix}/projects", tags=["Projects"])
 app.include_router(predictions_router, prefix=f"{api_prefix}/predictions", tags=["Predictions"])
+app.include_router(analysis_router, prefix=f"{api_prefix}/analysis", tags=["Unified Analysis"])
 
 
 
