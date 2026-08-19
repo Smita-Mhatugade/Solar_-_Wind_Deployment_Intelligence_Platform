@@ -83,3 +83,14 @@ htmlcov/
 # ── Alembic (DB migrations) ───────────────────────────────────────────────────
 # Keep migration scripts but ignore generated env
 alembic/versions/__pycache__/
+
+# ── Unnecessary / Temp Files ──────────────────────────────────────────────────
+New folder/
+tasks.txt
+tasks1.txt
+
+# ── ML Models (allow .joblib for demo) ────────────────────────────────────────
+!backend/models/*.joblib
+
+# ── IDE / Tool specific ──────────────────────────────────────────────────────
+.antigravity-ide/

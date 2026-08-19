@@ -7,8 +7,6 @@ import api from '../services/api';
 
 const QUICK_ACTIONS = [
   { to: '/projects', label: 'New Project', color: 'solar', desc: 'Start a deployment project' },
-  { to: '/solar', label: 'Solar Analysis', color: 'wind', desc: 'Predict solar energy yield' },
-  { to: '/wind', label: 'Wind Analysis', color: 'wind', desc: 'Predict wind energy output' },
   { to: '/site-analysis', label: 'Site Suitability', color: 'solar', desc: 'Score a site 0–100' },
 ];
 
