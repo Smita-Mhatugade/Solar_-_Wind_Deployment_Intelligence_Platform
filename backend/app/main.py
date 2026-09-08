@@ -63,11 +63,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Configure CORS (Allows frontend on localhost:3000 to call backend on localhost:8000)
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS] if settings.BACKEND_CORS_ORIGINS else ["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

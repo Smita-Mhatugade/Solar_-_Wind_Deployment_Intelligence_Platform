@@ -12,6 +12,8 @@ from typing import List
 import json
 
 
+from pydantic import validator
+
 class Settings(BaseSettings):
     """
     Central configuration object.
@@ -24,6 +26,13 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "change-me-in-production-minimum-32-characters"
 
     DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/solar_wind_db"
+
+    @validator("DATABASE_URL", pre=True)
+    def fix_database_url(cls, v: str) -> str:
+        if isinstance(v, str) and v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql://", 1)
+        return v
+
     POSTGRES_DB: str = "solar_wind_db"
     POSTGRES_USER: str = "postgres"
     POSTGRES_PASSWORD: str = "postgres"

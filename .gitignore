@@ -94,3 +94,7 @@ tasks1.txt
 
 # ── IDE / Tool specific ──────────────────────────────────────────────────────
 .antigravity-ide/
+
+# Server logs
+backend/uvicorn_err.txt
+backend/uvicorn_out.txt
