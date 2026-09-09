@@ -14,10 +14,11 @@ export default function SavedProjectsTable() {
   const fetchHistory = async () => {
     try {
       const data = await analysisService.getHistory();
-      setProjects(data);
+      setProjects(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Failed to fetch history", err);
       setError("Failed to load saved projects.");
+      setProjects([]);
     } finally {
       setLoading(false);
     }
@@ -45,16 +46,18 @@ export default function SavedProjectsTable() {
 
   if (loading) return <div className="card" style={{ padding: '2rem', textAlign: 'center' }}><span className="spinner"></span> Loading Saved Projects...</div>;
   if (error) return <div className="card" style={{ padding: '2rem', color: '#ef4444' }}>{error}</div>;
-  if (projects.length === 0) return null;
 
-  const selectedProjects = projects.filter(p => selectedIds.includes(p.id));
+  const safeProjects = Array.isArray(projects) ? projects : [];
+  if (safeProjects.length === 0) return null;
+
+  const selectedProjects = safeProjects.filter(p => selectedIds.includes(p.id));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '2rem' }}>
       
       {/* Table Section */}
       <div className="card">
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>Saved Projects (Database)</h3>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '1.5rem' }}>Saved Projects</h3>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
             <thead>
@@ -67,7 +70,7 @@ export default function SavedProjectsTable() {
               </tr>
             </thead>
             <tbody>
-              {projects.map(p => (
+              {safeProjects.map(p => (
                 <tr key={p.id} style={{ borderBottom: '1px solid var(--bg-border)', background: selectedIds.includes(p.id) ? 'rgba(37,99,235,0.05)' : 'transparent' }}>
                   <td style={{ padding: '1rem' }}>
                     <input 
@@ -77,17 +80,17 @@ export default function SavedProjectsTable() {
                       style={{ cursor: 'pointer' }}
                     />
                   </td>
-                  <td style={{ padding: '1rem', fontWeight: 600 }}>{p.site_name}</td>
+                  <td style={{ padding: '1rem', fontWeight: 600 }}>{p.site_name || 'Unnamed'}</td>
                   <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
-                    {p.latitude.toFixed(4)}, {p.longitude.toFixed(4)}
+                    {Number(p.latitude || 0).toFixed(4)}, {Number(p.longitude || 0).toFixed(4)}
                   </td>
                   <td style={{ padding: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: getStatusColor(p.suitability_score) }}></div>
-                      {p.suitability_score ? p.suitability_score.toFixed(1) + '%' : 'N/A'}
+                      <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: getStatusColor(p.suitability_score || 0) }}></div>
+                      {p.suitability_score ? Number(p.suitability_score).toFixed(1) + '%' : 'N/A'}
                     </div>
                   </td>
-                  <td style={{ padding: '1rem' }}>{p.recommendation}</td>
+                  <td style={{ padding: '1rem' }}>{p.recommendation || 'N/A'}</td>
                 </tr>
               ))}
             </tbody>
@@ -105,8 +108,8 @@ export default function SavedProjectsTable() {
             {/* Headers */}
             <div style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Metric</div>
             {selectedProjects.map(p => (
-              <div key={`head-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 700, color: 'var(--text-primary)', borderTop: `4px solid ${getStatusColor(p.suitability_score)}` }}>
-                {p.site_name}
+              <div key={`head-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 700, color: 'var(--text-primary)', borderTop: `4px solid ${getStatusColor(p.suitability_score || 0)}` }}>
+                {p.site_name || 'Unnamed'}
               </div>
             ))}
 
@@ -114,15 +117,15 @@ export default function SavedProjectsTable() {
             <div style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Coordinates</div>
             {selectedProjects.map(p => (
               <div key={`coord-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem' }}>
-                {p.latitude.toFixed(4)}, {p.longitude.toFixed(4)}
+                {Number(p.latitude || 0).toFixed(4)}, {Number(p.longitude || 0).toFixed(4)}
               </div>
             ))}
 
             {/* Suitability Score */}
             <div style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Suitability Score</div>
             {selectedProjects.map(p => (
-              <div key={`score-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 800, color: getStatusColor(p.suitability_score) }}>
-                {p.suitability_score ? p.suitability_score.toFixed(1) + '%' : 'N/A'}
+              <div key={`score-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 800, color: getStatusColor(p.suitability_score || 0) }}>
+                {p.suitability_score ? Number(p.suitability_score).toFixed(1) + '%' : 'N/A'}
               </div>
             ))}
 
@@ -130,7 +133,7 @@ export default function SavedProjectsTable() {
             <div style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Elevation (m)</div>
             {selectedProjects.map(p => (
               <div key={`elev-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem' }}>
-                {p.elevation_m ? p.elevation_m.toFixed(1) : 'N/A'}
+                {p.elevation_m ? Number(p.elevation_m).toFixed(1) : 'N/A'}
               </div>
             ))}
 
@@ -138,7 +141,7 @@ export default function SavedProjectsTable() {
             <div style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Solar (GHI) kWh/m²</div>
             {selectedProjects.map(p => (
               <div key={`solar-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem' }}>
-                {p.solar_irradiance_kwh ? p.solar_irradiance_kwh.toFixed(1) : 'N/A'}
+                {p.solar_irradiance_kwh ? Number(p.solar_irradiance_kwh).toFixed(1) : 'N/A'}
               </div>
             ))}
 
@@ -146,7 +149,7 @@ export default function SavedProjectsTable() {
             <div style={{ background: 'var(--bg-card)', padding: '1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Wind Speed (m/s)</div>
             {selectedProjects.map(p => (
               <div key={`wind-${p.id}`} style={{ background: 'var(--bg-card)', padding: '1rem' }}>
-                {p.wind_speed_50m_ms ? p.wind_speed_50m_ms.toFixed(1) : 'N/A'}
+                {p.wind_speed_50m_ms ? Number(p.wind_speed_50m_ms).toFixed(1) : 'N/A'}
               </div>
             ))}
 

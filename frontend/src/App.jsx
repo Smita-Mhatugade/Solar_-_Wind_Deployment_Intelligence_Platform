@@ -1,17 +1,10 @@
 /**
- * App.jsx — Main application with React Router (Public Tool Mode)
- *
- * Routes:
- *   /              → redirect to /dashboard
- *   /dashboard     → DashboardPage
- *   /projects      → ProjectsPage
- *   /site-analysis → SiteAnalysisPage
- *   /reports       → ReportsPage
+ * App.jsx — Main application with React Router & ErrorBoundary (Public Tool Mode)
  */
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 
-import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import Sidebar from './components/Sidebar';
 import DashboardPage from './pages/DashboardPage';
 import ProjectsPage from './pages/ProjectsPage';
@@ -52,45 +45,47 @@ function DashboardLayout({ children }) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/dashboard"
-          element={
-            <DashboardLayout>
-              <DashboardPage />
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/projects"
-          element={
-            <DashboardLayout>
-              <ProjectsPage />
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/site-analysis"
-          element={
-            <DashboardLayout>
-              <SiteAnalysisPage />
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <DashboardLayout>
-              <ReportsPage />
-            </DashboardLayout>
-          }
-        />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/dashboard"
+            element={
+              <DashboardLayout>
+                <DashboardPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/projects"
+            element={
+              <DashboardLayout>
+                <ProjectsPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/site-analysis"
+            element={
+              <DashboardLayout>
+                <SiteAnalysisPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <DashboardLayout>
+                <ReportsPage />
+              </DashboardLayout>
+            }
+          />
 
-        {/* Default redirects */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </BrowserRouter>
+          {/* Default redirects */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

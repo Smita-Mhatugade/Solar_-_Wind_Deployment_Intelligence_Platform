@@ -12,7 +12,6 @@ export const analysisService = {
    * @returns {Promise<Object>} The unified analysis JSON response
    */
   async runAnalysis(latitude, longitude, siteName) {
-    // We pass latitude, longitude, and site_name matching the AnalysisRequest schema
     const { data } = await api.post('/analysis/', {
       latitude: parseFloat(latitude),
       longitude: parseFloat(longitude),
@@ -26,8 +25,19 @@ export const analysisService = {
    * @returns {Promise<Array>} List of saved site analyses.
    */
   async getHistory() {
-    const { data } = await api.get('/analysis/history');
-    return data;
+    try {
+      const { data } = await api.get('/analysis/history');
+      if (Array.isArray(data)) return data;
+      throw new Error('Response is not an array');
+    } catch {
+      const local = localStorage.getItem('site_analyses');
+      try {
+        const parsed = local ? JSON.parse(local) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
   },
 
   /**
@@ -36,7 +46,15 @@ export const analysisService = {
    * @returns {Promise<Object>}
    */
   async deleteHistory(analysisId) {
-    const { data } = await api.delete(`/analysis/history/${analysisId}`);
-    return data;
+    try {
+      const { data } = await api.delete(`/analysis/history/${analysisId}`);
+      return data;
+    } catch {
+      const local = localStorage.getItem('site_analyses');
+      const parsed = local ? JSON.parse(local) : [];
+      const filtered = parsed.filter(item => String(item.id) !== String(analysisId));
+      localStorage.setItem('site_analyses', JSON.stringify(filtered));
+      return { status: 'deleted' };
+    }
   }
 };

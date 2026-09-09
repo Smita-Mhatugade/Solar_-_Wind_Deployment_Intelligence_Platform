@@ -1,9 +1,9 @@
 /**
- * DashboardPage.jsx — Main overview after login
+ * DashboardPage.jsx — Main overview after login (Public Tool Mode)
  */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../services/api';
+import { projectService } from '../services/api';
 
 const QUICK_ACTIONS = [
   { to: '/projects', label: 'New Project', color: 'solar', desc: 'Start a deployment project' },
@@ -22,26 +22,23 @@ export default function DashboardPage() {
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
 
-  const user = (() => {
-    try { return JSON.parse(localStorage.getItem('user') || '{}'); }
-    catch { return {}; }
-  })();
-
   useEffect(() => {
-    api.get('/projects')
-      .then(r => setProjects(r.data))
+    projectService.getAll()
+      .then(res => setProjects(Array.isArray(res) ? res : []))
       .catch(() => setProjects([]))
       .finally(() => setLoadingProjects(false));
   }, []);
 
   const greeting = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 17 ? 'Good afternoon' : 'Good evening';
 
+  const safeProjects = Array.isArray(projects) ? projects : [];
+
   return (
     <div className="page-content">
       {/* Welcome header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 className="page-title">
-          {greeting}, {user?.full_name ? user.full_name.split(' ')[0] : 'User'}
+          {greeting}, Analyst
         </h1>
         <p className="page-subtitle">
           Welcome to the Solar & Wind Deployment Intelligence Platform
@@ -52,7 +49,7 @@ export default function DashboardPage() {
       <div className="stats-grid" style={{ marginBottom: '2rem' }}>
         <div className="stat-card solar">
           <div className="stat-value" style={{ color: 'var(--color-solar)' }}>
-            {loadingProjects ? '…' : projects.length}
+            {loadingProjects ? '…' : safeProjects.length}
           </div>
           <div className="stat-label">My Projects</div>
         </div>
@@ -116,7 +113,7 @@ export default function DashboardPage() {
             <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
               <span className="spinner" /> Loading…
             </div>
-          ) : projects.length === 0 ? (
+          ) : safeProjects.length === 0 ? (
             <div className="empty-state" style={{ padding: '2rem' }}>
               <h3>No projects yet</h3>
               <p>Create your first solar or wind deployment project</p>
@@ -124,15 +121,15 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {projects.slice(0, 4).map((p) => (
-                <div key={p.id} style={{
+              {safeProjects.slice(0, 4).map((p) => (
+                <div key={p.id || p.project_name} style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   padding: '0.75rem', background: 'var(--bg-600)', borderRadius: 'var(--radius-md)',
                 }}>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: 'var(--font-size-sm)' }}>{p.project_name}</div>
+                    <div style={{ fontWeight: 600, fontSize: 'var(--font-size-sm)' }}>{p.project_name || 'Unnamed Project'}</div>
                     <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' }}>
-                      {p.state} · {p.latitude.toFixed(2)}°, {p.longitude.toFixed(2)}°
+                      {p.state || 'Region'} · {Number(p.latitude || 0).toFixed(2)}°, {Number(p.longitude || 0).toFixed(2)}°
                     </div>
                   </div>
                   <span className="badge badge-success">Active</span>

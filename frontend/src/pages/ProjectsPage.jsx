@@ -2,7 +2,7 @@
  * ProjectsPage.jsx — Full project management (list, create, edit, delete)
  */
 import { useState, useEffect, useCallback } from 'react';
-import api from '../services/api';
+import { projectService } from '../services/api';
 
 const INITIAL_FORM = {
   project_name: '',
@@ -35,8 +35,8 @@ export default function ProjectsPage() {
   const fetchProjects = useCallback(async () => {
     setLoading(true);
     try {
-      const { data } = await api.get('/projects');
-      setProjects(data);
+      const data = await projectService.getAll();
+      setProjects(Array.isArray(data) ? data : []);
     } catch {
       setProjects([]);
     } finally {
@@ -56,11 +56,11 @@ export default function ProjectsPage() {
   function openEdit(project) {
     setEditProject(project);
     setForm({
-      project_name: project.project_name,
+      project_name: project.project_name || '',
       description: project.description || '',
-      state: project.state,
-      latitude: String(project.latitude),
-      longitude: String(project.longitude),
+      state: project.state || '',
+      latitude: String(project.latitude ?? ''),
+      longitude: String(project.longitude ?? ''),
     });
     setFormError('');
     setShowModal(true);
@@ -91,9 +91,9 @@ export default function ProjectsPage() {
     setSubmitting(true);
     try {
       if (editProject) {
-        await api.put(`/projects/${editProject.id}`, payload);
+        await projectService.update(editProject.id, payload);
       } else {
-        await api.post('/projects', payload);
+        await projectService.create(payload);
       }
       closeModal();
       fetchProjects();
@@ -106,13 +106,15 @@ export default function ProjectsPage() {
 
   async function handleDelete(id) {
     try {
-      await api.delete(`/projects/${id}`);
+      await projectService.delete(id);
       setDeleteConfirm(null);
       fetchProjects();
-    } catch (err) {
-      alert(err.response?.data?.detail || 'Failed to delete project.');
+    } catch {
+      alert('Failed to delete project.');
     }
   }
+
+  const safeProjects = Array.isArray(projects) ? projects : [];
 
   return (
     <div className="page-content">
@@ -133,7 +135,7 @@ export default function ProjectsPage() {
           <span className="spinner" style={{ width: 32, height: 32, borderWidth: 3 }} />
           <p style={{ marginTop: '1rem' }}>Loading projects…</p>
         </div>
-      ) : projects.length === 0 ? (
+      ) : safeProjects.length === 0 ? (
         <div className="card">
           <div className="empty-state">
             <h3>No projects yet</h3>
@@ -151,26 +153,22 @@ export default function ProjectsPage() {
                 <th>State / Region</th>
                 <th>Coordinates</th>
                 <th>Description</th>
-                <th>Created</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {projects.map((p, idx) => (
-                <tr key={p.id}>
+              {safeProjects.map((p, idx) => (
+                <tr key={p.id || idx}>
                   <td style={{ color: 'var(--text-muted)' }}>{idx + 1}</td>
                   <td>
-                    <div style={{ fontWeight: 600 }}>{p.project_name}</div>
+                    <div style={{ fontWeight: 600 }}>{p.project_name || 'Unnamed Project'}</div>
                   </td>
-                  <td>{p.state}</td>
+                  <td>{p.state || 'N/A'}</td>
                   <td style={{ fontFamily: 'monospace', fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)' }}>
-                    {p.latitude.toFixed(4)}°, {p.longitude.toFixed(4)}°
+                    {Number(p.latitude || 0).toFixed(4)}°, {Number(p.longitude || 0).toFixed(4)}°
                   </td>
                   <td style={{ color: 'var(--text-secondary)', maxWidth: 200 }}>
                     {p.description || <span style={{ color: 'var(--text-muted)' }}>—</span>}
-                  </td>
-                  <td style={{ color: 'var(--text-muted)', fontSize: 'var(--font-size-xs)' }}>
-                    {new Date(p.created_at).toLocaleDateString()}
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
