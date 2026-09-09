@@ -17,6 +17,6 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: BACKEND_CORS_ORIGINS
-        sync: false # Set this to your Vercel URL, e.g. ["https://your-app.vercel.app"]
+        value: '["https://solar-wind-deployment-intelligence.vercel.app"]'
       - key: DEBUG
         value: "False"
