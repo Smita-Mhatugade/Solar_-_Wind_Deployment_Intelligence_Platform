@@ -14,8 +14,6 @@ const NAV_ITEMS = [
   {
     section: 'Analysis',
     items: [
-      { to: '/solar', label: 'Solar Prediction' },
-      { to: '/wind', label: 'Wind Prediction' },
       { to: '/site-analysis', label: 'Site Analysis' },
     ],
   },

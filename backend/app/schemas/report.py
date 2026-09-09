@@ -1,7 +1,6 @@
 """
 app/schemas/report.py – Pydantic schemas for Report validation.
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from pydantic import BaseModel, Field, ConfigDict

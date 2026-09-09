@@ -12,7 +12,6 @@ Validation rules enforced:
   - longitude    : required, must be between -180.0 and 180.0
   - description  : optional
 
-Day 6 – Infosys Virtual Internship | 10 July 2026
 """
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator

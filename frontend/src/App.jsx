@@ -7,10 +7,8 @@
  *   /register      → RegisterPage
  *   /dashboard     → DashboardPage (protected)
  *   /projects      → ProjectsPage (protected)
- *   /solar         → ComingSoonPage (protected)
- *   /wind          → ComingSoonPage (protected)
- *   /site-analysis → ComingSoonPage (protected)
- *   /reports       → ComingSoonPage (protected)
+ *   /site-analysis → SiteAnalysisPage (protected)
+ *   /reports       → ReportsPage (protected)
  */
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
@@ -21,8 +19,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import ProjectsPage from './pages/ProjectsPage';
-
 import SiteAnalysisPage from './pages/SiteAnalysisPage';
+import ReportsPage from './pages/ReportsPage';
 
 /** Placeholder for Milestone 2 pages */
 function ComingSoonPage({ title, icon }) {
@@ -54,8 +52,6 @@ function DashboardLayout({ children }) {
   const TITLES = {
     '/dashboard': { label: 'Dashboard' },
     '/projects': { label: 'My Projects' },
-    '/solar': { label: 'Solar Prediction' },
-    '/wind': { label: 'Wind Prediction' },
     '/site-analysis': { label: 'Site Suitability Analysis' },
     '/reports': { label: 'Reports' },
   };
@@ -120,32 +116,15 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/solar"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <ComingSoonPage title="Solar Prediction" />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/wind"
-          element={
-            <ProtectedRoute>
-              <DashboardLayout>
-                <ComingSoonPage title="Wind Prediction" />
-              </DashboardLayout>
-            </ProtectedRoute>
-          }
-        />
+        {/* Unified Analysis */}
         <Route
           path="/site-analysis"
           element={
-            <DashboardLayout>
-              <SiteAnalysisPage />
-            </DashboardLayout>
+            <ProtectedRoute>
+              <DashboardLayout>
+                <SiteAnalysisPage />
+              </DashboardLayout>
+            </ProtectedRoute>
           }
         />
         <Route
@@ -153,7 +132,7 @@ export default function App() {
           element={
             <ProtectedRoute>
               <DashboardLayout>
-                <ComingSoonPage title="Reports" />
+                <ReportsPage />
               </DashboardLayout>
             </ProtectedRoute>
           }

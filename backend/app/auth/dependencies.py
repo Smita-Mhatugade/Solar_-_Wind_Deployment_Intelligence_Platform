@@ -1,7 +1,6 @@
 """
 app/auth/dependencies.py – FastAPI dependencies for authentication.
 
-Day 6 – Infosys Virtual Internship
 """
 
 from fastapi import Depends, HTTPException, status

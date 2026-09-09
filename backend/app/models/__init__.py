@@ -13,7 +13,6 @@ Tables implemented:
   - Report          – Generated report metadata
   - Project         – Solar/wind deployment projects
 
-Day 6 – Infosys Virtual Internship | 10 July 2026
 """
 
 from app.models.user import User

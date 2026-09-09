@@ -3,7 +3,6 @@ app/api/reports.py – Report Generation endpoints.
 
 All endpoints require authentication (JWT Bearer token).
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks

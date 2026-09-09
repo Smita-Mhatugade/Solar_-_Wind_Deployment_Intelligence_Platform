@@ -23,7 +23,6 @@ from app.auth.dependencies import get_current_user
 from app.models.user import User
 
 
-# ── Role Constants ─────────────────────────────────────────────────────────────
 ROLE_ADMIN = "admin"
 ROLE_ANALYST = "analyst"
 ROLE_USER = "user"
@@ -31,7 +30,6 @@ ROLE_USER = "user"
 ALL_ROLES = [ROLE_ADMIN, ROLE_ANALYST, ROLE_USER]
 
 
-# ── Role Dependency Factory ────────────────────────────────────────────────────
 def require_role(*allowed_roles: str):
     """
     Dependency factory — returns a FastAPI dependency that only allows
@@ -54,7 +52,6 @@ def require_role(*allowed_roles: str):
     return role_checker
 
 
-# ── Shortcut Dependencies ──────────────────────────────────────────────────────
 def require_admin(current_user: User = Depends(get_current_user)) -> User:
     """Dependency: allows only admin users."""
     if current_user.role != ROLE_ADMIN:

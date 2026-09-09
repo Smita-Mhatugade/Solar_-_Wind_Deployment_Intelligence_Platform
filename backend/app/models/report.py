@@ -1,16 +1,5 @@
 """
 app/models/report.py – SQLAlchemy ORM model for generated reports.
-
-Table: reports
-  id               SERIAL PRIMARY KEY
-  user_id          INTEGER FK → users.id
-  title            VARCHAR(255)
-  report_type      VARCHAR(50)  -- 'solar' | 'wind' | 'site_analysis' | 'comprehensive'
-  file_path        VARCHAR(500) -- Path to the generated PDF/Excel file
-  status           VARCHAR(50)  -- 'generating' | 'ready' | 'failed'
-  created_at       TIMESTAMP DEFAULT NOW()
-
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, func
@@ -26,10 +15,8 @@ class Report(Base):
 
     __tablename__ = "reports"
 
-    # ── Primary Key ───────────────────────────────────────────────────────
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
 
-    # ── Foreign Key → users.id ────────────────────────────────────────────
     user_id = Column(
         Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
@@ -37,16 +24,13 @@ class Report(Base):
         index=True,
     )
 
-    # ── Report Metadata ───────────────────────────────────────────────────
     title = Column(String(255), nullable=False)
     report_type = Column(String(50), nullable=False)
     file_path = Column(String(500), nullable=True)
     status = Column(String(50), default="ready")
 
-    # ── Timestamps ────────────────────────────────────────────────────────
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # ── Relationship back to User ─────────────────────────────────────────
     user = relationship("User", back_populates="reports")
 
     def __repr__(self) -> str:

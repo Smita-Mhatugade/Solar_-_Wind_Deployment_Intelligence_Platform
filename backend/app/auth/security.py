@@ -1,7 +1,6 @@
 """
 app/auth/security.py – Password hashing and JWT generation.
 
-Day 6 – Infosys Virtual Internship
 """
 
 from datetime import datetime, timedelta, timezone

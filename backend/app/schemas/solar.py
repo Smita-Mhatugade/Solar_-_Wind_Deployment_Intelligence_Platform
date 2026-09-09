@@ -1,7 +1,6 @@
 """
 app/schemas/solar.py – Pydantic schemas for Solar Prediction validation.
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from pydantic import BaseModel, Field, ConfigDict

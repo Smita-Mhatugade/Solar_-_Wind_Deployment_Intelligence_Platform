@@ -1,32 +1,7 @@
 """
 app/services/deployment_strategy.py – Hybrid Deployment Recommendation Service.
 
-This module implements the business logic that recommends the most suitable
-renewable energy deployment strategy (Solar, Wind, or Hybrid) for a given
-location by combining outputs from the Solar Assessment Service and the
-Wind Assessment Service.
-
-Design principles:
-  - Rule-based: All decisions are transparent and auditable (no black-box ML).
-  - Extensible: New rules are added as entries in the ``_RULES`` table.
-  - Deterministic: Same inputs always produce the same recommendation.
-  - Modular: ``recommend_deployment()``, ``generate_reason()``, and
-    ``confidence_score()`` are independently callable and testable.
-
-Confidence score methodology:
-  - Base confidence is derived from the strength of BOTH resources.
-  - Mismatched resources (one Excellent, one Poor) → lower confidence.
-  - Both resources Excellent → highest confidence.
-  - Both resources Poor → lowest confidence (recommend Neither, but
-    still returns lowest scoring option to avoid a null result).
-  - Score is capped to the range [10, 99] to avoid false certainties.
-
-Compatible with future modules:
-  - NASA POWER + Global Wind Atlas → pass real irradiance and wind speeds.
-  - Raster / Vector Analysis → enrich inputs before calling this service.
-  - Report Generation → embed the returned dict directly in PDF/Excel reports.
-
-Day 7 – Infosys Virtual Internship | 20 July 2026
+Recommends the most suitable deployment strategy for a given location.
 """
 
 from __future__ import annotations
@@ -40,12 +15,10 @@ from app.services.wind_assessment import classify_wind_site
 
 logger = logging.getLogger(__name__)
 
-# ── Type Aliases ──────────────────────────────────────────────────────────────
 ResourceQuality = Literal["Poor", "Moderate", "Good", "Excellent"]
 DeploymentType = Literal["Solar", "Wind", "Hybrid", "Not Recommended"]
 
 
-# ── Internal Data Structures ──────────────────────────────────────────────────
 
 @dataclass(frozen=True)
 class _Rule:
@@ -66,12 +39,10 @@ class _Rule:
     reason: str
 
 
-# ── Rule Table ────────────────────────────────────────────────────────────────
 # Rules are evaluated top-to-bottom; the FIRST matching rule wins.
 # To add a new rule: append a ``_Rule(...)`` entry anywhere in this list.
 # Ordering: most specific / highest-confidence rules should come first.
 _RULES: list[_Rule] = [
-    # ── Excellent Solar ───────────────────────────────────────────────────────
     _Rule(
         solar_class="Excellent",
         wind_class="Excellent",
@@ -100,7 +71,6 @@ _RULES: list[_Rule] = [
         confidence=90,
         reason="Excellent solar potential but weak wind resource.",
     ),
-    # ── Good Solar ────────────────────────────────────────────────────────────
     _Rule(
         solar_class="Good",
         wind_class="Excellent",
@@ -129,7 +99,6 @@ _RULES: list[_Rule] = [
         confidence=78,
         reason="Good solar irradiance with limited wind resource favours solar deployment.",
     ),
-    # ── Moderate Solar ────────────────────────────────────────────────────────
     _Rule(
         solar_class="Moderate",
         wind_class="Excellent",
@@ -158,7 +127,6 @@ _RULES: list[_Rule] = [
         confidence=50,
         reason="Moderate solar potential in a low-wind zone; solar is the marginal preference.",
     ),
-    # ── Poor Solar ────────────────────────────────────────────────────────────
     _Rule(
         solar_class="Poor",
         wind_class="Excellent",
@@ -190,7 +158,6 @@ _RULES: list[_Rule] = [
 ]
 
 
-# ── Public API ────────────────────────────────────────────────────────────────
 
 def recommend_deployment(
     solar_irradiance: float,
@@ -341,7 +308,6 @@ def confidence_score(solar_class: ResourceQuality, wind_class: ResourceQuality) 
     return max(10, min(99, rule.confidence))
 
 
-# ── Internal Helpers ──────────────────────────────────────────────────────────
 
 def _lookup_rule(solar_class: ResourceQuality, wind_class: ResourceQuality) -> _Rule:
     """

@@ -1,27 +1,17 @@
-# Module Mapping
+# Module Responsibility Mapping
 
-This document outlines the core modules of the Solar & Wind Deployment Intelligence Platform and their responsibilities.
-
-## 1. Authentication
-- **Responsibilities**: Handles user registration, login, JWT token generation, role-based access control, and session management.
-
-## 2. Solar Prediction
-- **Responsibilities**: Processes meteorological data (NASA POWER) to train models and predict solar energy yield (kWh/m²) for specific geographic coordinates.
-
-## 3. Wind Prediction
-- **Responsibilities**: Processes wind and climate data (Global Wind Atlas, NASA POWER) to evaluate wind speed, power density, and predict energy yield for wind turbines.
-
-## 4. Site Suitability
-- **Responsibilities**: Integrates solar and wind predictions with terrain (SRTM), land use (Sentinel-2), and infrastructure (OSM) data to calculate an overall site viability score (0-100).
-
-## 5. Database
-- **Responsibilities**: Manages the storage, retrieval, and relational integrity of user profiles, projects, site metadata, environmental data, predictions, and reports using an ORM framework.
-
-## 6. Reports
-- **Responsibilities**: Compiles predictions, suitability scores, and site data into comprehensive, downloadable summaries (PDF/Markdown) for stakeholders.
-
-## 7. Dashboard
-- **Responsibilities**: The frontend user interface that visualizes projects, interactive maps, metric charts, predictions, and site comparisons.
-
-## 8. API Services
-- **Responsibilities**: The central backend routing layer that exposes endpoints (REST/GraphQL) for the frontend to interact with the authentication, prediction, and database modules.
+| Module | Input | Output | Location |
+|---|---|---|---|
+| Authentication | User credentials | JWT token | `app/api/auth.py` |
+| Solar Prediction | NASA POWER data | Solar class, capacity factor | `app/services/solar_assessment.py` |
+| Wind Prediction | Wind speed | Wind class, capacity factor | `app/services/wind_assessment.py` |
+| Deployment Strategy | Solar class + Wind class | Solar / Wind / Hybrid recommendation | `app/services/deployment_strategy.py` |
+| Feature Engineering | Lat/Lon | Aggregated feature dict | `app/services/feature_builder.py` |
+| Site Suitability | Feature dict | Weighted suitability score | `app/services/site_scoring.py` |
+| Site Analysis | Lat/Lon (API call) | Full evaluation report | `app/services/spatial/analysis_coordinator.py` |
+| Energy Estimation | Capacity MW + CF% | Annual MWh | `app/services/energy_estimation.py` |
+| Evaluation | Feature dict | Constraints + score + recommendation | `app/evaluation/evaluator.py` |
+| Database | ORM models | PostgreSQL tables | `app/models/` |
+| Reports | Prediction data | PDF / Excel output | `app/api/reports.py` |
+| Dashboard | Prediction results | Graphs & Maps | `frontend/src/pages/DashboardPage.jsx` |
+| API Services | HTTP requests | JSON responses | `app/api/` |

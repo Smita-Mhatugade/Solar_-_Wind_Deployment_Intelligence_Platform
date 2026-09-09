@@ -7,7 +7,6 @@ This is the main application file that:
   3. Tests the database connection on startup
   4. Includes all the API routers from the app.api package
 
-Day 5 – Infosys Virtual Internship | 5 July 2026
 """
 
 from fastapi import FastAPI, HTTPException
@@ -23,8 +22,11 @@ from app.api import (
     solar_router,
     wind_router,
     site_router,
+    sites_router,
     reports_router,
     projects_router,
+    predictions_router,
+    analysis_router,
 )
 
 # Set up logging
@@ -61,27 +63,28 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Configure CORS (Allows frontend on localhost:3000 to call backend on localhost:8000)
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS] if settings.BACKEND_CORS_ORIGINS else ["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ── Include API Routers ───────────────────────────────────────────────────────
 api_prefix = settings.API_V1_STR
 
 app.include_router(auth_router, prefix=f"{api_prefix}/auth", tags=["Authentication"])
 app.include_router(solar_router, prefix=f"{api_prefix}/solar", tags=["Solar Prediction"])
 app.include_router(wind_router, prefix=f"{api_prefix}/wind", tags=["Wind Prediction"])
 app.include_router(site_router, prefix=f"{api_prefix}/site", tags=["Site Suitability Analysis"])
+app.include_router(sites_router, prefix=f"{api_prefix}/sites", tags=["Sites"])
 app.include_router(reports_router, prefix=f"{api_prefix}/reports", tags=["Report Generation"])
 app.include_router(projects_router, prefix=f"{api_prefix}/projects", tags=["Projects"])
+app.include_router(predictions_router, prefix=f"{api_prefix}/predictions", tags=["Predictions"])
+app.include_router(analysis_router, prefix=f"{api_prefix}/analysis", tags=["Unified Analysis"])
 
 
-# ── Health & Status Endpoints ─────────────────────────────────────────────────
 
 @app.get("/", tags=["Health"])
 def read_root():
