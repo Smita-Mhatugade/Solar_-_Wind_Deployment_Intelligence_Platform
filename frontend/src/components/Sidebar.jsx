@@ -1,7 +1,7 @@
 /**
- * Sidebar.jsx — Dashboard navigation sidebar
+ * Sidebar.jsx — Dashboard navigation sidebar (Public Tool Mode)
  */
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const NAV_ITEMS = [
   {
@@ -26,26 +26,6 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const navigate = useNavigate();
-
-  const user = (() => {
-    try {
-      return JSON.parse(localStorage.getItem('user') || '{}');
-    } catch {
-      return {};
-    }
-  })();
-
-  function handleLogout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
-  }
-
-  const initials = user.full_name
-    ? user.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-    : (user.email?.[0] || 'U').toUpperCase();
-
   return (
     <aside className="sidebar">
       {/* Logo */}
@@ -79,19 +59,12 @@ export default function Sidebar() {
       {/* Footer */}
       <div className="sidebar-footer">
         <div className="user-profile">
-          <div className="user-avatar">{initials}</div>
+          <div className="user-avatar">PA</div>
           <div className="user-info">
-            <div className="user-name">{user.full_name || user.email || 'User'}</div>
-            <div className="user-role">{user.role || 'user'}</div>
+            <div className="user-name">Public Analyst</div>
+            <div className="user-role">Open Access</div>
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          className="btn btn-ghost btn-sm w-full"
-          style={{ marginTop: '0.5rem', justifyContent: 'flex-start', gap: '0.5rem' }}
-        >
-          <span>Sign Out</span>
-        </button>
       </div>
     </aside>
   );

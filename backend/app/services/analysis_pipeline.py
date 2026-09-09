@@ -12,6 +12,8 @@ from app.services.energy_estimation import estimate_annual_energy
 from app.services.financial_analysis import generate_financial_metrics
 import hashlib
 
+_pipeline_cache = {}
+
 class AnalysisPipeline:
     """
     A unified service that executes the complete analysis workflow for a given site.
@@ -26,13 +28,12 @@ class AnalysisPipeline:
         
     def execute_pipeline(self, latitude: float, longitude: float, site_name: str = None) -> dict:
         """
-        Executes the full pipeline:
-        1. Retrieve features
-        2. Evaluate the site (score and constraints)
-        3. Determine deployment recommendation
-        4. Return consolidated response
+        Executes the full pipeline with in-memory caching for instant lookup.
         """
-        
+        cache_key = (round(float(latitude), 4), round(float(longitude), 4), site_name)
+        if cache_key in _pipeline_cache:
+            return _pipeline_cache[cache_key]
+
         # 1. Retrieve all features
         features = self.feature_builder.build_features(latitude, longitude)
         
@@ -168,7 +169,7 @@ class AnalysisPipeline:
 
         # 9. Consolidate response
         site_id = hashlib.md5(f"{latitude}:{longitude}".encode()).hexdigest()[:8].upper()
-        return {
+        response = {
             "site_id": f"SITE-{site_id}",
             "site_name": site_name,
             "latitude": latitude,
@@ -196,3 +197,5 @@ class AnalysisPipeline:
             "forecast": forecast_data,
             "monthly_yields": monthly_yields
         }
+        _pipeline_cache[cache_key] = response
+        return response
