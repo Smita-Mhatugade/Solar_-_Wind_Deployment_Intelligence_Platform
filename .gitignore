@@ -98,3 +98,5 @@ tasks1.txt
 # Server logs
 backend/uvicorn_err.txt
 backend/uvicorn_out.txt
+
+postgresqlneondb_*.txt
