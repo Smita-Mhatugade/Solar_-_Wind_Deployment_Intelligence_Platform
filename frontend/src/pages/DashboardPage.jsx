@@ -41,7 +41,7 @@ export default function DashboardPage() {
       {/* Welcome header */}
       <div style={{ marginBottom: '2rem' }}>
         <h1 className="page-title">
-          {greeting}, {user.full_name?.split(' ')[0] || 'User'}
+          {greeting}, {user?.full_name ? user.full_name.split(' ')[0] : 'User'}
         </h1>
         <p className="page-subtitle">
           Welcome to the Solar & Wind Deployment Intelligence Platform
