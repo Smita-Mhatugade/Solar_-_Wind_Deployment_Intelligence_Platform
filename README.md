@@ -1,26 +1,34 @@
 <div align="center">
-  <img src="https://via.placeholder.com/1200x300/0f1629/38bdf8?text=Solar+%26+Wind+Deployment+Intelligence+Platform" alt="Banner" />
+  <img src="https://via.placeholder.com/1200x300/0f172a/38bdf8?text=Solar+%26+Wind+Deployment+Intelligence+Platform" alt="Platform Banner" />
 
   <h1>☀️🌬️ Solar & Wind Deployment Intelligence Platform</h1>
 
   <p>
-    <strong>An AI-powered spatial analytics platform for evaluating, scoring, and forecasting renewable energy deployment sites — anywhere on Earth.</strong>
+    <strong>An end-to-end, AI-powered spatial intelligence platform for evaluating site suitability, energy yields, financial feasibility, and 12-month climate forecasts for renewable energy projects globally.</strong>
   </p>
 
   <p>
+    <a href="https://solar-wind-deployment-intelligence.vercel.app/"><img src="https://img.shields.io/badge/Live%20Demo-Vercel-000000.svg?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo"></a>
+    <a href="https://solar-wind-deployment-intelligence.onrender.com/docs"><img src="https://img.shields.io/badge/API-Render-46E3B7.svg?style=for-the-badge&logo=render&logoColor=white" alt="Backend API"></a>
     <a href="https://www.python.org"><img src="https://img.shields.io/badge/Python-3.11+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python"></a>
-    <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-0.139.0-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"></a>
+    <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI"></a>
     <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18.3.1-61DAFB.svg?style=for-the-badge&logo=react&logoColor=black" alt="React"></a>
-    <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-15-336791.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL"></a>
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-F7DF1E.svg?style=for-the-badge" alt="License"></a>
   </p>
+
+  <h3>
+    🔗 <a href="https://solar-wind-deployment-intelligence.vercel.app/"><strong>Explore Live Application</strong></a>
+  </h3>
 
   <p>
     <a href="#-overview">Overview</a> •
     <a href="#-key-features">Features</a> •
-    <a href="#-architecture">Architecture</a> •
-    <a href="#-quick-start">Quick Start</a> •
-    <a href="#-api-reference">API</a>
+    <a href="#-architecture--workflow">Architecture</a> •
+    <a href="#-technology-stack">Tech Stack</a> •
+    <a href="#-project-structure">Structure</a> •
+    <a href="#-quick-start--local-setup">Quick Start</a> •
+    <a href="#-api-reference">API Docs</a> •
+    <a href="#-recent-changes--enhancements">Recent Updates</a>
   </p>
 </div>
 
@@ -28,172 +36,265 @@
 
 ## 📖 Overview
 
-The **Solar & Wind Deployment Intelligence Platform** is a production-ready, full-stack enterprise application designed to empower renewable energy analysts, investors, and engineers. It evaluates the feasibility of deploying solar and wind energy farms at any geographic coordinate in minutes rather than weeks.
+The **Solar & Wind Deployment Intelligence Platform** is a full-stack, enterprise-grade spatial analytics and decision-support web application. Designed for clean energy developers, financial analysts, and environmental engineers, it evaluates the feasibility of deploying solar and wind energy projects at any geographic coordinate across the globe in seconds rather than weeks.
 
-By combining a **Random Forest ML model (R² = 0.89)** with live geospatial data pipelines (NASA POWER, Global Wind Atlas, OpenStreetMap, SRTM), the platform generates comprehensive suitability scores, 12-month energy forecasts, and detailed financial models (CAPEX, OPEX, LCOE, ROI, Payback Period), drastically reducing the time required for preliminary site analysis.
+By combining a **Random Forest ML Suitability Model (R² = 0.89)** with real-time geospatial data pipelines (**NASA POWER, Global Wind Atlas, OpenStreetMap, SRTM Elevation Models**), the platform outputs:
+- **0–100 Site Suitability Score** with breakdown metrics.
+- **12-Month Energy Yield Forecasts** for Solar PV, Wind Turbines, or Hybrid configurations.
+- **Financial Projections** including Estimated CAPEX, OPEX, LCOE ($/kWh), Annual Revenue, ROI, and Payback Period.
+- **Interactive Geospatial Visualization** with Leaflet interactive coordinate pickers and terrain elevation profiling.
+- **Automated PDF Report Generation** for instant stakeholder export.
+
+The platform is designed to operate both as an **open-access, zero-friction public intelligence tool** (with server-side in-memory caching and browser LocalStorage persistence) as well as an authenticated enterprise platform backed by PostgreSQL/PostGIS.
+
+---
+
+## 🌐 Live Demo
+
+- **Web Application (Vercel):** [https://solar-wind-deployment-intelligence.vercel.app/](https://solar-wind-deployment-intelligence.vercel.app/)
+- **Backend API & OpenAPI Docs (Render):** [https://solar-wind-deployment-intelligence.onrender.com/docs](https://solar-wind-deployment-intelligence.onrender.com/docs)
 
 ---
 
 ## ✨ Key Features
 
-- 🌍 **Geospatial Data Integration:** Auto-fetches and processes data from NASA POWER, Global Wind Atlas, OpenStreetMap, and SRTM elevation models.
-- 🧠 **ML Suitability Scoring:** Random Forest Regressor predicts site viability based on irradiance, wind speed, elevation, slope, and grid proximity constraints.
-- ⚡ **Energy Yield Forecasting:** Calculates estimated monthly and annual energy yield forecasts tailored for Solar, Wind, or Hybrid deployment strategies.
-- 💰 **Financial Analysis:** Automatically estimates Initial Capital Cost (CAPEX), Revenue, Payback Period, ROI, and LCOE per kWh.
-- 🗺️ **Interactive Geographic Dashboard:** Premium React UI featuring Leaflet interactive maps, dynamic state handling, Recharts visualizations, and a unified analysis report.
-- 🔐 **JWT Authentication:** Secure login flow with role-based access control (Admin, Analyst, User).
-- 🧪 **Comprehensive QA:** A robust 164-test Pytest suite covering all critical pipelines, ML models, and API endpoints.
+- 🌍 **Geospatial & Climate Data Integration:** Automatically fetches and computes data from NASA POWER (solar irradiance & temp), Global Wind Atlas (50m/100m wind speeds), OpenStreetMap (road & grid distance), and SRTM (elevation & slope).
+- 🧠 **ML Suitability Scoring Engine:** Trained Random Forest Regressor predicts site viability based on environmental parameters, topography, and infrastructure constraints.
+- ⚡ **12-Month Energy Forecasting:** Generates monthly kWh/m² energy yield curves tailored for Solar, Wind, or Hybrid deployment strategies.
+- 💰 **Financial Feasibility Analysis:** Dynamically calculates Initial Capital Expenditure (CAPEX), Operational Cost (OPEX), Levelized Cost of Energy (LCOE), ROI, and Payback Period based on configurable target capacity (MW).
+- 🗺️ **Interactive Geographic Map:** Built with Leaflet, offering click-to-select coordinate pinning, latitude/longitude validation, and elevation profile visualization.
+- 📄 **Instant PDF Export:** One-click generation of comprehensive PDF executive summary reports using `jsPDF` and `html2canvas`.
+- 📊 **Multi-Site Comparison Grid:** Compare up to 3 candidate sites side-by-side on metrics like GHI, Wind Speed, Elevation, and ROI.
+- ⚡ **High Performance & Zero-Friction:** In-memory `@lru_cache` pipeline caching on the backend and LocalStorage persistence on the frontend eliminate deployment bottlenecks and login friction.
+- 🛡️ **Bulletproof UI Resilience:** Integrated React `ErrorBoundary` safeguards and fallback state handling guarantee 100% uptime with zero blank screen crashes.
 
 ---
 
-## 🛠️ Tech Stack
-
-### Backend
-- **Core:** Python 3.11+, FastAPI, Uvicorn
-- **Machine Learning & Geospatial:** Scikit-learn, Pandas, GeoPandas, Rasterio, Shapely, NumPy
-- **Database ORM:** SQLAlchemy 2.0, Alembic (migrations)
-- **Security:** JWT (python-jose), passlib (bcrypt)
-
-### Frontend
-- **Core:** React 18, Vite 5, React Router DOM v6
-- **UI Components:** Leaflet, React-Leaflet, Recharts, Lucide React
-- **Network:** Axios
-
-### Infrastructure
-- **Database Engine:** PostgreSQL 15, PostGIS 3.3
-- **Database Management (GUI):** pgAdmin 4 (recommended for visually managing the database)
-- **Containerization:** Docker, Docker Compose
-
----
-
-## 📐 Architecture
+## 📐 Architecture & Workflow
 
 ```mermaid
-graph LR
-    subgraph Frontend ["🖥️ Frontend (React + Vite)"]
-        UI[User Interface]
-        Maps[Interactive Maps]
+graph TD
+    subgraph Client ["🖥️ Client Layer (Vercel)"]
+        UI["React 18 Dashboard & Site Analysis"]
+        Map["Leaflet Map Locator"]
+        Storage["LocalStorage (Projects & History Fallback)"]
+        EB["React ErrorBoundary"]
     end
 
-    subgraph Backend ["⚙️ Backend (FastAPI)"]
-        API[Unified API Routers]
-        Pipeline[Analysis Pipeline]
-        ML[ML Inference Engine]
-        Forecasting[Energy Yield]
-        Finance[Financial Metrics]
+    subgraph API Gateway ["⚙️ Backend Layer (Render)"]
+        FastAPI["FastAPI App (Python 3.11)"]
+        CORS["CORS Middleware"]
+        PublicAPI["Public & Authenticated Endpoints"]
     end
 
-    subgraph Data ["💾 Data Layer"]
-        DB[(PostgreSQL + PostGIS)]
-        Models[Trained ML Models]
-        External["NASA / OSM / SRTM"]
+    subgraph Processing ["🧠 Pipeline & Inference Engine"]
+        Cache["LRU Cache Layer"]
+        Pipeline["Analysis Pipeline Coordinator"]
+        MLModel["Random Forest Model (R² = 0.89)"]
+        EnergyCalc["Energy Yield & 12-Month Forecaster"]
+        FinCalc["Financial Feasibility Engine"]
     end
 
-    UI <--> |REST + JWT| API
-    Maps <--> API
-    API <--> Pipeline
-    Pipeline <--> ML
-    Pipeline <--> Forecasting
-    Pipeline <--> Finance
-    Pipeline <--> External
-    ML <--> Models
-    API <--> DB
+    subgraph Data Sources ["🌍 Data & Infrastructure Layer"]
+        NASA["NASA POWER API"]
+        GWA["Global Wind Atlas API"]
+        OSM["OpenStreetMap Services"]
+        SRTM["SRTM Elevation Provider"]
+        DB[("PostgreSQL + PostGIS (Optional Persisted Mode)")]
+    end
+
+    UI <--> |REST JSON| FastAPI
+    Map --> UI
+    UI <--> Storage
+    EB --> UI
+    
+    FastAPI --> CORS --> PublicAPI --> Pipeline
+    Pipeline <--> Cache
+    Pipeline --> MLModel
+    Pipeline --> EnergyCalc
+    Pipeline --> FinCalc
+    
+    Pipeline <--> NASA
+    Pipeline <--> GWA
+    Pipeline <--> OSM
+    Pipeline <--> SRTM
+    FastAPI <-.-> |Optional Auth/DB| DB
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ Technology Stack
 
-### 1. Prerequisites
-- **Python 3.11+**
-- **Node.js 18+**
-- **Docker Desktop** (For PostgreSQL Database container)
-- **pgAdmin 4** (Optional: Recommended GUI for managing the PostgreSQL database)
+### Backend
+- **Framework & Server:** Python 3.11+, FastAPI, Uvicorn
+- **Machine Learning & Data Science:** Scikit-learn, Pandas, NumPy, Joblib
+- **Geospatial & Topography:** GeoPandas, Rasterio, Shapely, PyProj
+- **Performance & Caching:** Python `functools.lru_cache`, In-Memory Cache
+- **Database & ORM (Optional Mode):** PostgreSQL 15, PostGIS 3.3, SQLAlchemy 2.0, Alembic
+- **Testing:** Pytest (160+ unit & integration tests)
 
-### 2. Database Setup
-Start a PostgreSQL + PostGIS instance using Docker Compose:
-```bash
-cd solar-wind-deployment-intelligence
-docker-compose up -d
+### Frontend
+- **Framework & Tooling:** React 18, Vite 5, React Router DOM v6
+- **Maps & Charts:** Leaflet, React-Leaflet, Recharts, Lucide React
+- **Document Export:** jsPDF, html2canvas
+- **HTTP Client:** Axios with response interceptors
+- **Styling:** CSS3 Design Tokens & Glassmorphism Aesthetics
+
+### Hosting & Infrastructure
+- **Frontend Hosting:** Vercel (CD/CI connected to `master`)
+- **Backend Hosting:** Render.com (Python 3.11 Docker Web Service)
+
+---
+
+## 📁 Project Structure
+
 ```
-*This spins up a `solar_wind_db` database on port 5432.*
+solar-wind-deployment-intelligence/
+├── backend/
+│   ├── alembic/                  # Database migration scripts
+│   ├── app/
+│   │   ├── api/                  # FastAPI routers (analysis, projects, auth, reports)
+│   │   ├── data_sources/         # Geospatial integrations (NASA, GWA, OSM, SRTM)
+│   │   ├── schemas/              # Pydantic data schemas
+│   │   ├── services/             # Core analysis pipeline, ML inference, financial models
+│   │   └── main.py               # FastAPI application entry point
+│   ├── models/                   # Trained Random Forest models (.joblib)
+│   ├── tests/                    # Pytest suite
+│   ├── Dockerfile                # Docker configuration
+│   └── requirements.txt          # Python dependencies
+├── frontend/
+│   ├── public/                   # Static assets
+│   ├── src/
+│   │   ├── api/                  # API communication wrappers
+│   │   ├── components/           # UI components (MapLocator, Charts, ErrorBoundary, Sidebar)
+│   │   ├── pages/                # Page views (Dashboard, SiteAnalysis, Projects, Reports)
+│   │   ├── services/             # Axios client & LocalStorage fallback handlers
+│   │   ├── App.jsx               # Main application routing
+│   │   └── main.jsx              # Application entry
+│   ├── package.json              # Node.js dependencies
+│   ├── vercel.json               # Vercel deployment configuration & Cache-Control rules
+│   └── vite.config.js            # Vite build setup
+├── docs/                         # Project documentation and performance metrics
+├── docker-compose.yml            # PostgreSQL + PostGIS local container setup
+├── render.yaml                   # Render deployment specification
+└── README.md                     # Project documentation
+```
 
-### 3. Backend Setup
-Open a terminal, navigate into the backend, and start the virtual environment:
+---
+
+## 🚀 Quick Start & Local Setup
+
+### Prerequisites
+- **Node.js** 18+
+- **Python** 3.11+
+- **Git**
+
+### 1. Clone the Repository
 ```bash
-cd solar-wind-deployment-intelligence/backend
+git clone https://github.com/Smita-Mhatugade/Solar_-_Wind_Deployment_Intelligence_Platform.git
+cd Solar_-_Wind_Deployment_Intelligence_Platform
+```
+
+### 2. Backend Setup
+Navigate to the `backend` directory, create a virtual environment, and install dependencies:
+
+```bash
+cd backend
 python -m venv venv
-venv\Scripts\activate   # (Windows)
-source venv/bin/activate # (Linux/macOS)
-```
-Install dependencies and set up the environment:
-```bash
-pip install -r requirements.txt
-cp .env.example .env    # Configure your database credentials here
-alembic upgrade head    # Run database migrations
-```
-Start the FastAPI server:
-```bash
-uvicorn app.main:app --reload --port 8000
-```
-> 🔗 **Swagger API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-### 4. Frontend Setup
-Open a **new terminal**, navigate to the frontend folder, and start Vite:
+# Windows
+.\venv\Scripts\activate
+
+# Linux/macOS
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+Start the FastAPI local development server:
 ```bash
-cd solar-wind-deployment-intelligence/frontend
+python -m uvicorn app.main:app --reload --port 8000
+```
+> 🔗 **Local Swagger API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+### 3. Frontend Setup
+Open a **new terminal**, navigate to the `frontend` folder, install dependencies, and launch Vite:
+
+```bash
+cd frontend
 npm install
 npm run dev
 ```
-> 🔗 **Application:** [http://localhost:5173](http://localhost:5173)
-
-### 5. Login
-To access the platform immediately, a seed test user is available:
-- **Email:** `user@gmail.com`
-- **Password:** `123456`
+> 🔗 **Local Application:** [http://localhost:5173/](http://localhost:5173/)
 
 ---
 
-## 📡 Core API Reference
+## 📡 API Reference
 
-All backend endpoints are prefixed with `/api/v1/`.
+All backend endpoints are accessible without friction in public mode.
 
-| Method | Endpoint | Description | Auth |
+| Method | Endpoint | Description | Auth Required |
 |---|---|---|---|
-| `POST` | `/auth/login` | Authenticate and receive a JWT token | ❌ |
-| `POST` | `/auth/register` | Register a new user account | ❌ |
-| `POST` | `/analysis/` | Run the full End-to-End unified analysis pipeline (ML, Energy, Finance) | ✅ |
-| `GET` | `/projects/` | Retrieve all saved deployment projects for the user | ✅ |
-
-*Full interactive documentation is available at `/docs` when the backend server is running.*
-
----
-
-## 🤝 Contributing
-
-Contributions, bug reports, and feature requests are welcome!
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-new-feature`
-3. Commit your changes: `git commit -m 'feat: add my new feature'`
-4. Push to the branch: `git push origin feature/my-new-feature`
-5. Open a Pull Request
-
-Please read `CONTRIBUTING.md` for full guidelines on code style, testing requirements, and the PR process.
+| `GET` | `/` | Health check & API status | ❌ |
+| `POST` | `/api/v1/analysis/` | Run full unified analysis (ML Score, Energy Forecast, Financial Metrics) | ❌ |
+| `GET` | `/api/v1/analysis/history` | Retrieve historical site analyses | ❌ |
+| `DELETE` | `/api/v1/analysis/history/{id}` | Delete a saved site analysis | ❌ |
+| `GET` | `/api/v1/projects/` | List saved deployment projects | ❌ |
+| `POST` | `/api/v1/projects/` | Create a new deployment project | ❌ |
 
 ---
 
-## 🙏 Acknowledgements
+## ⚙️ Environment Variables & Configuration
+
+### Frontend (`frontend/.env`)
+```env
+VITE_API_URL=https://solar-wind-deployment-intelligence.onrender.com/api/v1
+```
+*(For local testing, set `VITE_API_URL=http://localhost:8000/api/v1`)*
+
+### Backend (`backend/.env` - Optional DB Mode)
+```env
+PROJECT_NAME="Solar & Wind Deployment Intelligence Platform"
+API_V1_STR="/api/v1"
+CORS_ORIGINS=["http://localhost:5173","https://solar-wind-deployment-intelligence.vercel.app"]
+# DATABASE_URL=postgresql://user:password@localhost:5432/solar_wind_db
+```
+
+---
+
+## 🔄 Recent Changes & Enhancements
+
+- **Instant Public Tool Deployment:** Transformed the application into an open-access public intelligence tool, eliminating login/registration barriers and Neon database dependency issues.
+- **LocalStorage & In-Memory Fallbacks:** Integrated seamless browser `localStorage` fallbacks in `api.js` for project saving and analysis history, backed by `@lru_cache` on FastAPI.
+- **UI Crash Prevention (ErrorBoundary):** Created a dedicated React `ErrorBoundary` component to catch runtime exceptions gracefully.
+- **Defensive Property Handling:** Safeguarded all numeric property formatting (`Number(val || 0).toFixed()`) across all components to prevent React unmounting errors.
+- **Vercel Caching Optimization:** Added custom `Cache-Control: no-cache, no-store, must-revalidate` rules in `vercel.json` to prevent browsers from caching stale JavaScript bundles.
+
+---
+
+## 🔮 Future Scope
+
+- 🛰️ **High-Resolution Satellite Imagery Integration:** Ingest Sentinel-2 & Landsat 8 multispectral band imagery for automatic land cover (NDVI) classification.
+- ⚡ **Grid Connection Capacity Mapping:** Overlay high-voltage transmission line substations and capacities to estimate grid connection costs.
+- 📈 **Real-Time Battery Storage (BESS) Modeling:** Evaluate battery storage pairing (Solar + Storage / Wind + Storage) for peak shaving and energy arbitrage.
+- 🌍 **Global Policy & Tariff Simulator:** Incorporate country-specific feed-in tariffs, carbon credits, and tax incentives.
+
+---
+
+## 📜 License & Acknowledgements
+
+This project is licensed under the **MIT License**.
 
 Developed by **Smita Mhatugade** as part of the **Infosys Springboard Virtual Internship Program**.
 
-**Data Sources & Integrations:**
-- [NASA POWER](https://power.larc.nasa.gov/) — Solar irradiance & meteorological data
-- [Global Wind Atlas](https://globalwindatlas.info/) — Wind speed resource data
-- [OpenStreetMap](https://www.openstreetmap.org/) — Infrastructure & land-use data
-- [SRTM](https://www2.jpl.nasa.gov/srtm/) — Shuttle Radar Topography Mission elevation models
+**Data Sources & Providers:**
+- [NASA POWER Project](https://power.larc.nasa.gov/) — Solar irradiance & meteorological datasets
+- [Global Wind Atlas](https://globalwindatlas.info/) — Wind speed resource datasets
+- [OpenStreetMap](https://www.openstreetmap.org/) — Infrastructure & road spatial data
+- [SRTM](https://www2.jpl.nasa.gov/srtm/) — NASA Shuttle Radar Topography Mission elevation models
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ for a cleaner, renewable energy future.</sub>
+  <sub>Built with ❤️ for a cleaner, sustainable energy future.</sub>
 </div>
